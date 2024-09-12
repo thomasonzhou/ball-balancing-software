@@ -1,0 +1,15 @@
+// https://code.visualstudio.com/docs/devcontainers/create-dev-container
+{
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    }
+    // "postCreateCommand":
+}
