@@ -70,7 +70,8 @@ def calculate_li(T: npt.NDArray, phi_x: float, theta_y: float, pi_plane: npt.NDA
 
 def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     """Given li (vector between the plate mount and the motor mount) for any motor, calculate the absolute angle of the 
-    motor. This is with reference to the axis of the motor = 0. See angle gamma from `absolute_motor_angle.png`.
+    motor. This is with reference to the axis of the motor = 0. See angles from `relative_motor_angle.png` and 
+    `absolute_motor_angle.png`.
     
     Args:
         li (3 float vector): The vector from the motor mount -> plate mount
@@ -81,14 +82,14 @@ def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     # Magnitude of the vector between the plate mount and the motor mount
     li_mag = np.linalg.norm(li)
     # Use co-sine law to calculate the angle between the li vector and the motor shaft
-    rel_shaft_angle = calculate_angle_from_cosine(li_mag, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH)
+    alpha = calculate_angle_from_cosine(PLATE_LEG_LENGTH, li_mag, MOTOR_LEG_LENGTH)
     # Calculate the angle between li and the z-axis
     li_norm = li/li_mag
-    li_angle_from_z = np.arccos(np.dot(UNIT_K, li_norm))
+    beta = np.arccos(np.dot(UNIT_K, li_norm))
     # For example, when the li vector is pointing solely in the z-direction, the rel_shaft_angle = abs_shaft_angle
     # Otherwise, if the li vector is tilted toward the plate or away from the plate, the motor shaft angle will need
     # overrotate or under rotate to compensate. 
-    gamma = np.pi/4 - li_angle_from_z - rel_shaft_angle
+    gamma = np.pi/4 - beta - alpha
     return gamma
 
 
@@ -105,7 +106,7 @@ N = np.array([0, 0, 1]) # normal vector of plate
 motors = [Motor(orientation, distance=P_B_length) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
 phi_x, theta_y = calculate_theta_phi_from_N(N)
 for motor in motors:
-    li = calculate_li(T, phi_x, theta_y, pi=motor.plate_orientation_vector, bi = motor.motor_orientation_vector)
+    li = calculate_li(T, phi_x, theta_y, pi=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
     abs_angle = calculate_abs_motor_angle_from_li(li)
     motor.set_desired_angle(abs_angle)
 
