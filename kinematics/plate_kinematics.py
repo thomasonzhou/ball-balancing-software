@@ -28,7 +28,7 @@ def calculate_angle_from_cosine(a: float, b: float, c: float) -> float:
     return np.arccos((np.square(b) + np.square(c) - np.square(a))/(2*b*c))
 
 def calculate_theta_phi_from_T(T: npt.NDArray) -> tuple[float, float]:
-    """Given the desired height, find the tilt about the x and y axis
+    """Given the desired height, find the tilt about the x and y axis. See `rotation_math.png` for more details.
     
     Args: 
         T (3 float vector): The vector with the desired plane height and direction
@@ -41,15 +41,15 @@ def calculate_theta_phi_from_T(T: npt.NDArray) -> tuple[float, float]:
     theta_x = np.arcsin(T[0]/np.sqrt(1-np.square(T_norm[1])))
     return (theta_x, phi_y)
 
-def calculate_li(T: npt.NDArray, theta_x: float, phi_y: float, pi: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
+def calculate_li(T: npt.NDArray, theta_x: float, phi_y: float, pi_plane: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
     """Calculate the vector between the plate mount and the motor mount, for any motor. The configuration of the motor
-    is described with pi and bi.
+    is described with pi and bi. See `rotation_math.png` for more details.
 
     Args:
         T (3 float vector): The vector with mag/dir between the center of the motor mounts, and the center of the plate
         theta_x (float): The angle of the tilt of the plate about the x-axis (rad)
         phi_y (float): The angle of the tilt of the plane about the y-axis (rad)
-        pi (3 float vector): The vector describing the distance between plate mount and center of plate, in the plate's 
+        pi_plane (3 float vector): The vector describing the distance between plate mount and center of plate, in the plate's 
         reference frame
         bi (3 float vector): The vector describing the distance between the motor mount and center of plate, in the 
         body's reference frame
@@ -63,8 +63,8 @@ def calculate_li(T: npt.NDArray, theta_x: float, phi_y: float, pi: npt.NDArray, 
         [0, np.cos(phi_y), -np.sin(phi_y)],
         [-np.sin(theta_x), np.cos(theta_x)*np.sin(phi_y), np.cos(theta_x)*np.cos(phi_y)]
         )
-    # Rotate the pi vector out of the plate frame and into the body frame
-    pi_body = R_P_wrt_B @ pi
+    # Rotate the pi vector with the same rotation matrix as the unit K -> new normal vector
+    pi_body = R_P_wrt_B @ pi_plane
     li = T + pi_body - bi
     return li
 
