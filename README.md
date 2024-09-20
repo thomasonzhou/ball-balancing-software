@@ -12,7 +12,7 @@ devcontainer open .
 
 Make sure you have CMake installed. cd to the build directory and enter
 ```bash
-cmake ../src
+cmake ..
 cmake --build .
 ```
 
