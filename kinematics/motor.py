@@ -4,6 +4,7 @@ MOTOR_LEG_LENGTH = 3
 PLATE_LEG_LENGTH = 6
 
 class Motor:
+    """Class defining a motor's orientation and leg details"""
     motor_leg_length = MOTOR_LEG_LENGTH
     plate_leg_length = PLATE_LEG_LENGTH
 
@@ -13,7 +14,7 @@ class Motor:
         self.orientation_vector()
 
     def orientation_vector(self): 
-        # This is bi & pi
+        #p[] This is bi & pi
         motor_orientation_vector = np.array([np.cos(self.orientation), np.sin(self.orientation), 0])
         self.MOTOR_ORIENTATION_VECTOR = motor_orientation_vector * self.distance_from_origin
         self.PLATE_ORIENTATION_VECTOR = self.MOTOR_ORIENTATION_VECTOR

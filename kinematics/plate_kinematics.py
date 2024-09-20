@@ -2,7 +2,7 @@
 
 import numpy as np
 import numpy.typing as npt
-from motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
+from kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
 
 ### Can be changed
 P_B_length = 5
@@ -62,9 +62,9 @@ def calculate_li(T: npt.NDArray, phi_x: float, theta_y: float, pi_plat: npt.NDAr
     """
     # Rotation matrix of A*B where A is x rotation (phi_x), B is y rotation (theta_y)
     R_p_wrt_b = np.array(
-        [np.cos(theta_y), np.sin(theta_y)*np.sin(phi_x), np.sin(theta_y)*np.cos(phi_x)],
+        [[np.cos(theta_y), np.sin(theta_y)*np.sin(phi_x), np.sin(theta_y)*np.cos(phi_x)],
         [0, np.cos(phi_x), -np.sin(phi_x)],
-        [-np.sin(theta_y), np.cos(theta_y)*np.sin(phi_x), np.cos(phi_x)*np.cos(theta_y)]
+        [-np.sin(theta_y), np.cos(theta_y)*np.sin(phi_x), np.cos(phi_x)*np.cos(theta_y)]]
         )
     # Rotate the pi vector with the same rotation matrix as the unit K -> new normal vector
     pi_body = R_p_wrt_b @ pi_plat
@@ -109,7 +109,7 @@ N = np.array([0, 0, 1]) # normal vector of plate
 motors = [Motor(orientation, distance=P_B_length) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
 phi_x, theta_y = calculate_theta_phi_from_N(N)
 for motor in motors:
-    li = calculate_li(T, phi_x, theta_y, pi=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
+    li = calculate_li(T, phi_x, theta_y, pi_plat=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
     abs_angle = calculate_abs_motor_angle_from_li(li)
     motor.set_desired_angle(abs_angle)
 
