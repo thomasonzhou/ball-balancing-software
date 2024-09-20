@@ -2,12 +2,19 @@
 
 import numpy as np
 import numpy.typing as npt
+from motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
 
 ### Can be changed
-P_I = 5
-B_I = P_I
-MOTOR_LEG_LENGTH = 3
-PLATE_LEG_LENGTH = 6
+P_B_length = 5
+# See `plate_vectors.png`
+MOTOR_ORIENTATIONS = [
+    np.pi/2, # along the y-axis
+    7*np.pi/6, # 120 deg, CCW from A
+    11*np.pi/6, # 120, CW from A
+]
+
+# HELPER CONSTANTS
+UNIT_K = np.array([0, 0, 1])
 
 def calculate_angle_from_cosine(a: float, b: float, c: float) -> float:
     """Helper function to calculate angle from law of cosines
@@ -63,7 +70,7 @@ def calculate_li(T: npt.NDArray, theta_x: float, phi_y: float, pi: npt.NDArray, 
 
 def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     """Given li (vector between the plate mount and the motor mount) for any motor, calculate the absolute angle of the 
-    motor. This is with reference to the axis of the motor = 0.
+    motor. This is with reference to the axis of the motor = 0. See angle gamma from `absolute_motor_angle.png`.
     
     Args:
         li (3 float vector): The vector from the motor mount -> plate mount
@@ -80,29 +87,23 @@ def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     li_angle_from_z = np.arccos(np.dot(UNIT_K, li_norm))
     # For example, when the li vector is pointing solely in the z-direction, the rel_shaft_angle = abs_shaft_angle
     # Otherwise, if the li vector is tilted toward the plate or away from the plate, the motor shaft angle will need
-    # overrotate or under rotate to compensate
-    abs_shaft_angle = li_angle_from_z + rel_shaft_angle
-    return abs_shaft_angle
+    # overrotate or under rotate to compensate. 
+    gamma = np.pi/4 - li_angle_from_z - rel_shaft_angle
+    return gamma
 
 
 ### Default Configuration Setup
-# HELPER CONSTANTS
-UNIT_K = np.array([0, 0, 1])
-UNIT_XY_VEC = np.array([1, 1, 0])
-
 # DEFAULT VARIABLES DEFINING SETUP AND REST STATE
-# at rest, the shaft and plate legs will be perpendiculat
-MOTOR_TO_PLATE_HEIGHT = np.sqrt(np.square(MOTOR_LEG_LENGTH) + np.square(PLATE_LEG_LENGTH))
-T = np.array([0, 0, MOTOR_TO_PLATE_HEIGHT])
+# At rest, the shaft and plate legs will be perpendicular. See li (start) from `motorA_at_rest.png`.
+li_start = np.sqrt(np.square(MOTOR_LEG_LENGTH) + np.square(PLATE_LEG_LENGTH))
+T = np.array([0, 0, li_start])
 
-ORIENTATION_A = np.pi/2 # along the y-axis
-ORIENTATION_B = 7*np.pi/6 # 120 deg, CCW from A
-ORIENTATION_C = 11*np.pi/6 # 120, CW from A
-
-# bi per motor
-ORG_TO_MOTOR_A = np.multiply(UNIT_XY_VEC, [np.cos(ORIENTATION_A), np.sin(ORIENTATION_A), 0])
-ORG_TO_MOTOR_B = np.multiply(UNIT_XY_VEC, [np.cos(ORIENTATION_B), np.sin(ORIENTATION_B), 0])
-ORG_TO_MOTOR_C = np.multiply(UNIT_XY_VEC, [np.cos(ORIENTATION_C), np.sin(ORIENTATION_C), 0])
-
+# From here, the pipeline is:
+motors = [Motor(orientation, distance=P_B_length) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
+theta_x, phi_y = calculate_theta_phi_from_T(T)
+for motor in motors:
+    li = calculate_li(T, theta_x, phi_y, pi=motor.plate_orientation_vector, bi = motor.motor_orientation_vector)
+    abs_angle = calculate_abs_motor_angle_from_li(li)
+    motor.set_desired_angle(abs_angle)
 
 
