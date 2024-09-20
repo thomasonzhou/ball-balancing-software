@@ -1,4 +1,4 @@
-# Refer to `plate_kinematics_diagram.png` for the visual on the vectors used below
+# Refer to `plate_vectors.png` for the visual on the vectors used below
 
 import numpy as np
 import numpy.typing as npt
@@ -27,7 +27,7 @@ def calculate_angle_from_cosine(a: float, b: float, c: float) -> float:
     """
     return np.arccos((np.square(b) + np.square(c) - np.square(a))/(2*b*c))
 
-def calculate_theta_phi_from_T(T: npt.NDArray) -> tuple[float, float]:
+def calculate_theta_phi_from_N(N: npt.NDArray) -> tuple[float, float]:
     """Given the desired height, find the tilt about the x and y axis. See `rotation_math.png` for more details.
     
     Args: 
@@ -36,9 +36,9 @@ def calculate_theta_phi_from_T(T: npt.NDArray) -> tuple[float, float]:
     Returns:
         float: phi_x -> tilk about the x axis
         float: theta_y -> tilt about the y axis"""
-    T_norm = T/np.linalg.norm(T)
-    theta_y = np.arcsin(T_norm[1])
-    phi_x = np.arcsin(T[0]/np.sqrt(1-np.square(T_norm[1])))
+    N_norm = N/np.linalg.norm(N)
+    phi_x = np.arcsin(N_norm[1])
+    theta_y = np.arcsin(N_norm[0]/np.sqrt(1-np.square(N_norm[1])))
     return (phi_x, theta_y)
 
 def calculate_li(T: npt.NDArray, phi_x: float, theta_y: float, pi_plane: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
@@ -96,11 +96,14 @@ def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
 # DEFAULT VARIABLES DEFINING SETUP AND REST STATE
 # At rest, the shaft and plate legs will be perpendicular. See li (start) from `motorA_at_rest.png`.
 li_start = np.sqrt(np.square(MOTOR_LEG_LENGTH) + np.square(PLATE_LEG_LENGTH))
-T = np.array([0, 0, li_start])
+T = np.array([0, 0, li_start]) # from the middle of the base of the motor mounts to the middle of the plate
+N = np.array([0, 0, 1]) # normal vector of plate
 
 # From here, the pipeline is:
+# T - something
+# N - something
 motors = [Motor(orientation, distance=P_B_length) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
-phi_x, theta_y = calculate_theta_phi_from_T(T)
+phi_x, theta_y = calculate_theta_phi_from_N(N)
 for motor in motors:
     li = calculate_li(T, phi_x, theta_y, pi=motor.plate_orientation_vector, bi = motor.motor_orientation_vector)
     abs_angle = calculate_abs_motor_angle_from_li(li)

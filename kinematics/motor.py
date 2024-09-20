@@ -17,9 +17,9 @@ class Motor:
 
     def orientation_vector(self): 
         # This is bi & pi
-        self.motor_orientation_vector = np.multiply(UNIT_XY_VEC, [np.cos(self.orientation), np.sin(self.orientation), 0])
-        self.motor_orientation_vector = self.motor_orientation_vector * self.distance_from_origin
-        self.plate_orientation_vector = self.motor_orientation_vector
+        motor_orientation_vector = np.multiply(UNIT_XY_VEC, [np.cos(self.orientation), np.sin(self.orientation), 0])
+        self.MOTOR_ORIENTATION_VECTOR = motor_orientation_vector * self.distance_from_origin
+        self.PLATE_ORIENTATION_VECTOR = self.MOTOR_ORIENTATION_VECTOR
 
     def set_desired_angle(self, angle: float):
         self.desired_angle = angle
