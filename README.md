@@ -7,3 +7,16 @@ Also, to open a devcontainer directly from the command line, [make sure you have
 ```bash
 devcontainer open .
 ```
+
+## How to build the C++ binary
+
+Make sure you have CMake installed. cd to the build directory and enter
+```bash
+cmake ../src
+cmake --build .
+```
+
+The binary/binaries will be outputted as a file. To run a binary, type 
+```bash
+./name_of_binary
+```
