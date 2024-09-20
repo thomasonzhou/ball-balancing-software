@@ -59,9 +59,9 @@ def calculate_li(T: npt.NDArray, phi_x: float, theta_y: float, pi_plane: npt.NDA
     """
     # Rotation matrix of A*B where A is x rotation (phi_x), B is y rotation (theta_y)
     R_P_wrt_B = np.array(
-        [np.cos(phi_x), np.sin(phi_x)*np.sin(theta_y), np.sin(phi_x)*np.cos(theta_y)],
-        [0, np.cos(theta_y), -np.sin(theta_y)],
-        [-np.sin(phi_x), np.cos(phi_x)*np.sin(theta_y), np.cos(phi_x)*np.cos(theta_y)]
+        [np.cos(theta_y), np.sin(theta_y)*np.sin(phi_x), np.sin(theta_y)*np.cos(phi_x)],
+        [0, np.cos(phi_x), -np.sin(phi_x)],
+        [-np.sin(theta_y), np.cos(theta_y)*np.sin(phi_x), np.cos(phi_x)*np.cos(theta_y)]
         )
     # Rotate the pi vector with the same rotation matrix as the unit K -> new normal vector
     pi_body = R_P_wrt_B @ pi_plane
