@@ -34,21 +34,21 @@ def calculate_theta_phi_from_T(T: npt.NDArray) -> tuple[float, float]:
         T (3 float vector): The vector with the desired plane height and direction
     
     Returns:
-        float: theta_x -> tilk about the x axis
-        float: phi_y -> tilt about the y axis"""
+        float: phi_x -> tilk about the x axis
+        float: theta_y -> tilt about the y axis"""
     T_norm = T/np.linalg.norm(T)
-    phi_y = np.arcsin(T_norm[1])
-    theta_x = np.arcsin(T[0]/np.sqrt(1-np.square(T_norm[1])))
-    return (theta_x, phi_y)
+    theta_y = np.arcsin(T_norm[1])
+    phi_x = np.arcsin(T[0]/np.sqrt(1-np.square(T_norm[1])))
+    return (phi_x, theta_y)
 
-def calculate_li(T: npt.NDArray, theta_x: float, phi_y: float, pi_plane: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
+def calculate_li(T: npt.NDArray, phi_x: float, theta_y: float, pi_plane: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
     """Calculate the vector between the plate mount and the motor mount, for any motor. The configuration of the motor
     is described with pi and bi. See `rotation_math.png` for more details.
 
     Args:
         T (3 float vector): The vector with mag/dir between the center of the motor mounts, and the center of the plate
-        theta_x (float): The angle of the tilt of the plate about the x-axis (rad)
-        phi_y (float): The angle of the tilt of the plane about the y-axis (rad)
+        phi_x (float): The angle of the tilt of the plate about the x-axis (rad)
+        theta_y (float): The angle of the tilt of the plane about the y-axis (rad)
         pi_plane (3 float vector): The vector describing the distance between plate mount and center of plate, in the plate's 
         reference frame
         bi (3 float vector): The vector describing the distance between the motor mount and center of plate, in the 
@@ -57,11 +57,11 @@ def calculate_li(T: npt.NDArray, theta_x: float, phi_y: float, pi_plane: npt.NDA
     Returns:
         3 float vector: The vector from motor mount -> plate mount
     """
-    # Rotation matrix of A*B where A is x rotation (theta_x), B is y rotation (phi_y)
+    # Rotation matrix of A*B where A is x rotation (phi_x), B is y rotation (theta_y)
     R_P_wrt_B = np.array(
-        [np.cos(theta_x), np.sin(theta_x)*np.sin(phi_y), np.sin(theta_x)*np.cos(phi_y)],
-        [0, np.cos(phi_y), -np.sin(phi_y)],
-        [-np.sin(theta_x), np.cos(theta_x)*np.sin(phi_y), np.cos(theta_x)*np.cos(phi_y)]
+        [np.cos(phi_x), np.sin(phi_x)*np.sin(theta_y), np.sin(phi_x)*np.cos(theta_y)],
+        [0, np.cos(theta_y), -np.sin(theta_y)],
+        [-np.sin(phi_x), np.cos(phi_x)*np.sin(theta_y), np.cos(phi_x)*np.cos(theta_y)]
         )
     # Rotate the pi vector with the same rotation matrix as the unit K -> new normal vector
     pi_body = R_P_wrt_B @ pi_plane
@@ -100,9 +100,9 @@ T = np.array([0, 0, li_start])
 
 # From here, the pipeline is:
 motors = [Motor(orientation, distance=P_B_length) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
-theta_x, phi_y = calculate_theta_phi_from_T(T)
+phi_x, theta_y = calculate_theta_phi_from_T(T)
 for motor in motors:
-    li = calculate_li(T, theta_x, phi_y, pi=motor.plate_orientation_vector, bi = motor.motor_orientation_vector)
+    li = calculate_li(T, phi_x, theta_y, pi=motor.plate_orientation_vector, bi = motor.motor_orientation_vector)
     abs_angle = calculate_abs_motor_angle_from_li(li)
     motor.set_desired_angle(abs_angle)
 
