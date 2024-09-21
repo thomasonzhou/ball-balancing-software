@@ -5,11 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mte-380-software"
 description = "MTE380 software"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
   "numpy"
 ]
 requires-python = ">= 3.10"
 authors = [
-  {name = "Olivia Ye", email = "oliviawxye@gmail.com"},
+  {name = "voat", email = "oliviawxye@gmail.com"},
 ]
