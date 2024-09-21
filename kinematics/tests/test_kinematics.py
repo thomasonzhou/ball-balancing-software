@@ -11,6 +11,8 @@ from kinematics.plate_kinematics import (
     calculate_abs_motor_angle_from_li
 )
 
+# Run all tests using `pytest`, or try `pytest -m helper`, `pytest -m stew`
+
 ### ALL `KNOWN` VALUES HAVE BEEN HAND-CALCULATED. ROUNDED TO 3 DECIMAL PLACES.
 # See `diagrams/kinematics_test_values.png` for math background.
 
@@ -108,12 +110,3 @@ def test_calculate_abs_motor_angle_from_li():
         angle = calculate_abs_motor_angle_from_li(value["known_li"])
         angle = np.round(angle, ROUND_DECIMALS)
         assert value["known_abs_angle"] == angle
-
-
-if __name__ == "__main__":
-    test_calculate_cosine()
-    test_calculate_theta_phi_from_N()
-    test_calculate_xy_rotation_matrix()
-    test_calculate_li()
-    test_calculate_abs_motor_angle_from_li()
-
