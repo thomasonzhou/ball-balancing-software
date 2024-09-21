@@ -5,7 +5,7 @@ import numpy.typing as npt
 from kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
 
 ### Can be changed
-P_B_length = 5
+PIBI_LENGTH = 5
 # See `motor_orientations.png`
 MOTOR_ORIENTATIONS = [
     np.pi/2, # Motor A: along the y-axis
@@ -16,6 +16,25 @@ MOTOR_ORIENTATIONS = [
 # HELPER CONSTANTS
 UNIT_K = np.array([0, 0, 1])
 
+
+def calculate_xy_rotation_matrix(theta_y: float, phi_x: float) -> npt.NDArray:
+    """Helper function to calculate the xy rotation matrix
+    
+    Args:
+        theta_y: To rotate in Y
+        phi_x: To rotate in X
+    
+    Returns:
+        3x3 float matrix: Rotation matrix
+    """
+    R_p_wrt_b = np.array(
+        [[np.cos(theta_y), np.sin(theta_y)*np.sin(phi_x), np.sin(theta_y)*np.cos(phi_x)],
+        [0, np.cos(phi_x), -np.sin(phi_x)],
+        [-np.sin(theta_y), np.cos(theta_y)*np.sin(phi_x), np.cos(phi_x)*np.cos(theta_y)]]
+        )
+    return R_p_wrt_b
+
+
 def calculate_angle_from_cosine(a: float, b: float, c: float) -> float:
     """Helper function to calculate angle from law of cosines
     
@@ -23,9 +42,10 @@ def calculate_angle_from_cosine(a: float, b: float, c: float) -> float:
         a (float): Opposite side of return angle
         b, c (floats): Other sides of triangle
     Returns:
-        float: theta of A (rad)
+        float: Theta of A (rad)
     """
     return np.arccos((np.square(b) + np.square(c) - np.square(a))/(2*b*c))
+
 
 def calculate_theta_phi_from_N(N: npt.NDArray) -> tuple[float, float]:
     """Given the normal vector of the plate, find the tilt about the x and y axis.
@@ -39,11 +59,12 @@ def calculate_theta_phi_from_N(N: npt.NDArray) -> tuple[float, float]:
         float: theta_y -> tilt about the y axis
     """
     N_norm = N/np.linalg.norm(N)
-    phi_x = np.arcsin(N_norm[1])
+    phi_x = np.arcsin(-N_norm[1])
     theta_y = np.arcsin(N_norm[0]/np.sqrt(1-np.square(N_norm[1])))
     return (phi_x, theta_y)
 
-def calculate_li(T: npt.NDArray, phi_x: float, theta_y: float, pi_plat: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
+
+def calculate_li(T: npt.NDArray, theta_y: float, phi_x: float, pi_plat: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
     """Calculate the vector between the plate mount and the motor mount, for any motor. The configuration of the 
     mounting on the plate, and the mounting of the motor, is described with pi and bi respectively. 
     See `rotation_math.png` for more details.
@@ -61,15 +82,12 @@ def calculate_li(T: npt.NDArray, phi_x: float, theta_y: float, pi_plat: npt.NDAr
         3 float vector: The vector from motor mount -> plate mount
     """
     # Rotation matrix of A*B where A is x rotation (phi_x), B is y rotation (theta_y)
-    R_p_wrt_b = np.array(
-        [[np.cos(theta_y), np.sin(theta_y)*np.sin(phi_x), np.sin(theta_y)*np.cos(phi_x)],
-        [0, np.cos(phi_x), -np.sin(phi_x)],
-        [-np.sin(theta_y), np.cos(theta_y)*np.sin(phi_x), np.cos(phi_x)*np.cos(theta_y)]]
-        )
+    R_p_wrt_b = calculate_xy_rotation_matrix(theta_y, phi_x)
     # Rotate the pi vector with the same rotation matrix as the unit K -> new normal vector
     pi_body = R_p_wrt_b @ pi_plat
     li = T + pi_body - bi
     return li
+
 
 def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     """Given li (vector between the plate mount and the motor mount) for any motor, calculate the absolute angle of the 
@@ -87,12 +105,11 @@ def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     # Use co-sine law to calculate the angle between the li vector and the motor shaft
     alpha = calculate_angle_from_cosine(PLATE_LEG_LENGTH, li_mag, MOTOR_LEG_LENGTH)
     # Calculate the angle between li and the z-axis
-    li_norm = li/li_mag
-    beta = np.arccos(np.dot(UNIT_K, li_norm))
+    beta = np.arccos(np.dot(UNIT_K, li)/li_mag)
     # For example, when the li vector is pointing solely in the z-direction, the rel_shaft_angle = abs_shaft_angle
     # Otherwise, if the li vector is tilted toward the plate or away from the plate, the motor shaft angle will need
     # overrotate or under rotate to compensate. 
-    gamma = np.pi/4 - beta - alpha
+    gamma = np.pi/2 - beta - alpha
     return gamma
 
 
@@ -106,10 +123,10 @@ N = np.array([0, 0, 1]) # normal vector of plate
 # From here, the pipeline is:
 # T - something
 # N - something
-motors = [Motor(orientation, distance=P_B_length) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
+motors = [Motor(orientation, distance=PIBI_LENGTH) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
 phi_x, theta_y = calculate_theta_phi_from_N(N)
 for motor in motors:
-    li = calculate_li(T, phi_x, theta_y, pi_plat=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
+    li = calculate_li(T, theta_y, phi_x, pi_plat=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
     abs_angle = calculate_abs_motor_angle_from_li(li)
     motor.set_desired_angle(abs_angle)
 
