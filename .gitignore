@@ -1,4 +1,4 @@
 .vscode
-build
+build/
 mte380_python_software.egg-info/
 __pycache__/
