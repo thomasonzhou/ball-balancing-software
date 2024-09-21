@@ -49,7 +49,7 @@ KNOWN_MOTOR_ANGLE_PAIR = {
         },
     "five": {
             "known_li": np.array([0.038, -0.019, 7.142]),
-            "known_abs_angle": np.round(33.719 * np.pi / 180, ROUND_DECIMALS)
+            "known_abs_angle": np.round(33.722 * np.pi / 180, ROUND_DECIMALS)
     }
 }
 
