@@ -1,3 +1,3 @@
-#include <opencv2/objdetect/arucodetector.hpp>
+#include <opencv2/aruco.hpp>
 
 
