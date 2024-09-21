@@ -14,4 +14,4 @@ include_directories(
    "/Users/thomasonzhou/repos/opencv-4.10.0" 
     )
 
-# target_link_libraries( pose_estimation ${OpenCV_DIR}/libs )
+target_link_libraries( pose_estimation ${OpenCV_LIBS} )
