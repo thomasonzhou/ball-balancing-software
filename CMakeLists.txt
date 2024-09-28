@@ -3,6 +3,7 @@ project(mte-380-software)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(pose_estimation src/pose_estimation.cpp)
+add_executable(calibration src/calibration.cpp)
 
 set(OpenCV_DIR "/Users/thomasonzhou/repos/build_opencv") # example dir, your installation path may be different
 
@@ -14,5 +15,6 @@ include_directories(
     )
 
 target_link_libraries( pose_estimation ${OpenCV_LIBS} )
+target_link_libraries( calibration ${OpenCV_LIBS} )
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
