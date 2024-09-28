@@ -1,124 +1,46 @@
-// #include "pose_estimation.hpp"
-
-// void generateMarker(){
-//     cv::Mat markerImage;
-//     cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
-//     cv::aruco::generateImageMarker(dictionary, 23, 200, markerImage, 1);
-//     cv::imwrite("marker23.png", markerImage);
-// }
-
-// void detectMarker(){
-//     cv::Mat inputImage = cv::imread("test23.png");
-//     std::vector<int> markerIds;
-//     std::vector<std::vector<cv::Point2f>> markerCorners, rejectedCandidates;
-//     cv::aruco::DetectorParameters detectorParams = cv::aruco::DetectorParameters();
-//     cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
-//     cv::aruco::ArucoDetector detector(dictionary, detectorParams);
-//     detector.detectMarkers(inputImage, markerCorners, markerIds, rejectedCandidates);
-//     cv::Mat outputImage = inputImage.clone();
-//     cv::aruco::drawDetectedMarkers(outputImage, markerCorners, markerIds);
-//     cv::imwrite("test23_detect.jpg", outputImage);
-// }
-
-// int main(){
-//     std::cout << "Starting pose estimation"<<std::endl;
-//     generateMarker();
-//     detectMarker();
-// }
-
-#include <opencv2/highgui.hpp>
-#include <opencv2/objdetect/aruco_detector.hpp>
-#include <iostream>
 #include "aruco_samples_utility.hpp"
+#include "pose_estimation.hpp"
+// #include <opencv2/highgui.hpp>
+// #include <opencv2/objdetect/aruco_detector.hpp>
 
 using namespace std;
 using namespace cv;
 
-namespace {
-const char* about = "Basic marker detection";
-
-//! [aruco_detect_markers_keys]
-const char* keys  =
-        "{d        | 0     | dictionary: DICT_4X4_50=0, DICT_4X4_100=1, DICT_4X4_250=2,"
-        "DICT_4X4_1000=3, DICT_5X5_50=4, DICT_5X5_100=5, DICT_5X5_250=6, DICT_5X5_1000=7, "
-        "DICT_6X6_50=8, DICT_6X6_100=9, DICT_6X6_250=10, DICT_6X6_1000=11, DICT_7X7_50=12,"
-        "DICT_7X7_100=13, DICT_7X7_250=14, DICT_7X7_1000=15, DICT_ARUCO_ORIGINAL = 16,"
-        "DICT_APRILTAG_16h5=17, DICT_APRILTAG_25h9=18, DICT_APRILTAG_36h10=19, DICT_APRILTAG_36h11=20}"
-        "{cd       |       | Input file with custom dictionary }"
-        "{v        |       | Input from video or image file, if ommited, input comes from camera }"
-        "{ci       | 0     | Camera id if input doesnt come from video (-v) }"
-        "{c        |       | Camera intrinsic parameters. Needed for camera pose }"
-        "{l        | 0.1   | Marker side length (in meters). Needed for correct scale in camera pose }"
-        "{dp       |       | File of marker detector parameters }"
-        "{r        |       | show rejected candidates too }"
-        "{refine   |       | Corner refinement: CORNER_REFINE_NONE=0, CORNER_REFINE_SUBPIX=1,"
-        "CORNER_REFINE_CONTOUR=2, CORNER_REFINE_APRILTAG=3}";
-
-//! [aruco_detect_markers_keys]
-
-const string refineMethods[4] = {
-    "None",
-    "Subpixel",
-    "Contour",
-    "AprilTag"
-};
-
+void generateMarker(){
+    cv::Mat markerImage;
+    cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(ARUCOTAG_DICTIONARY);
+    cv::aruco::generateImageMarker(dictionary, 23, 200, markerImage, 1);
+    cv::imwrite("marker42.png", markerImage);
 }
 
-int main(int argc, char *argv[]) {
-    CommandLineParser parser(argc, argv, keys);
-    parser.about(about);
+void detectMarker(){
+    const int camId = 0;
+    const bool showRejected = false;
+    const bool estimatePose = false; // note: requires loading a calibration file specific to each camera
 
-    bool showRejected = parser.has("r");
-    bool estimatePose = parser.has("c");
-    float markerLength = parser.get<float>("l");
+    constexpr float markerLengthInches = 2.0;
+    constexpr float markerLength = markerLengthInches * 0.0254; // in meters
 
-    aruco::DetectorParameters detectorParams = readDetectorParamsFromCommandLine(parser);
-    aruco::Dictionary dictionary = readDictionatyFromCommandLine(parser);
+    cv::aruco::DetectorParameters detectorParams;
 
-    if (parser.has("refine")) {
-        // override cornerRefinementMethod read from config file
-        int user_method = parser.get<aruco::CornerRefineMethod>("refine");
-        if (user_method < 0 || user_method >= 4)
-        {
-            std::cout << "Corner refinement method should be in range 0..3" << std::endl;
-            return 0;
-        }
-        detectorParams.cornerRefinementMethod = user_method;
-    }
-
-    std::cout << "Corner refinement method: " << refineMethods[detectorParams.cornerRefinementMethod] << std::endl;
-
-    int camId = parser.get<int>("ci");
-
-    String video;
-    if(parser.has("v")) {
-        video = parser.get<String>("v");
-    }
-
-    if(!parser.check()) {
-        parser.printErrors();
-        return 0;
-    }
+    const cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(ARUCOTAG_DICTIONARY);
 
     //! [aruco_pose_estimation1]
     Mat camMatrix, distCoeffs;
     if(estimatePose) {
         // You can read camera parameters from tutorial_camera_params.yml
-        readCameraParamsFromCommandLine(parser, camMatrix, distCoeffs);
+        bool readOk = readCameraParameters(CAMERA_PARAMS_FILE, camMatrix, distCoeffs);
+        if(!readOk) {
+            throw std::runtime_error("Invalid camera file\n");
+        }
     }
     //! [aruco_pose_estimation1]
     //! [aruco_detect_markers]
     cv::aruco::ArucoDetector detector(dictionary, detectorParams);
     cv::VideoCapture inputVideo;
     int waitTime;
-    if(!video.empty()) {
-        inputVideo.open(video);
-        waitTime = 0;
-    } else {
-        inputVideo.open(camId);
-        waitTime = 10;
-    }
+    inputVideo.open(camId);
+    waitTime = 10;
 
     double totalTime = 0;
     int totalIterations = 0;
@@ -183,5 +105,10 @@ int main(int argc, char *argv[]) {
         if(key == 27) break;
     }
     //! [aruco_detect_markers]
-    return 0;
+}
+
+int main(){
+    std::cout << "Starting pose estimation"<<std::endl;
+    generateMarker();
+    detectMarker();
 }

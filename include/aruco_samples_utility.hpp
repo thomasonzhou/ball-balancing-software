@@ -71,7 +71,7 @@ inline static void readCameraParamsFromCommandLine(cv::CommandLineParser &parser
     //! [camDistCoeffs]
 }
 
-inline static cv::aruco::Dictionary readDictionatyFromCommandLine(cv::CommandLineParser &parser) {
+inline static cv::aruco::Dictionary readDictionaryFromCommandLine(cv::CommandLineParser &parser) {
     cv::aruco::Dictionary dictionary;
     if (parser.has("cd")) {
         cv::FileStorage fs(parser.get<std::string>("cd"), cv::FileStorage::READ);
