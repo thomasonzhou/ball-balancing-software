@@ -1,6 +1,6 @@
-# def hi_there():
-#     print("hi_there")
+"""Example main code. See code below for how this can possibly be used."""
 
+# TODO: DELETE SAMPLE CODE
 from kinematics.utils.helper import helper
 
 def some_math():
