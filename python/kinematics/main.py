@@ -1,7 +1,7 @@
 # def hi_there():
 #     print("hi_there")
 
-from .utils.helper import helper
+from kinematics.utils.helper import helper
 
 def some_math():
     print(2+2)
