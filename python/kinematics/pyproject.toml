@@ -3,8 +3,8 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mte380-software"
-description = "MTE380 software"
+name = "kinematics"
+description = "MTE380 software kinematics"
 version = "0.0.1"
 dependencies = [
   "numpy"
