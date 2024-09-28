@@ -11,6 +11,10 @@
                 "ms-azuretools.vscode-docker"
             ]
         }
-    }
+    },
+    "workspaceFolder": "..",
+    "mounts": [
+        "source=${localWorkspaceFolder}/python,target=/app/python,type=bind"
+    ]
     // "postCreateCommand":
 }
