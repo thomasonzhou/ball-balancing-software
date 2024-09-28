@@ -2,4 +2,4 @@
 
 # TODO: DELETE SAMPLE CODE
 def helper():
-    print("i am helper")
+    print("I am a helper function!")

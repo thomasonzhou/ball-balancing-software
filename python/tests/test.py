@@ -4,4 +4,5 @@
 from kinematics.main import some_math
 
 if __name__ == "__main__":
+    print("If this goes right, I should see a number...")
     some_math()

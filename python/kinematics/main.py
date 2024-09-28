@@ -4,7 +4,8 @@
 from kinematics.utils.helper import helper
 
 def some_math():
-    print(2+2)
+    four = 2+2
+    print(f"Two plus two is: {four}")
 
 if __name__ == "__main__":
     helper()
