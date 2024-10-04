@@ -5,4 +5,8 @@ A list of resources used:
 (run with flags -r -d=10)
 
 # Calibration
-- [charuco](https://docs.opencv.org/3.4/df/d4a/tutorial_charuco_detection.html)
+- [charuco tutorial](https://docs.opencv.org/3.4/df/d4a/tutorial_charuco_detection.html)
+- [charuco calibration](https://github.com/opencv/opencv/blob/4.x/samples/cpp/tutorial_code/objectDetection/calibrate_camera_charuco.cpp)
+
+# Marker generation
+- [board creation](https://github.com/opencv/opencv/blob/4.x/samples/cpp/tutorial_code/objectDetection/create_board_charuco.cpp)
