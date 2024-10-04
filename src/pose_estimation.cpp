@@ -1,22 +1,13 @@
 #include "aruco_samples_utility.hpp"
-#include "pose_estimation.hpp"
-// #include <opencv2/highgui.hpp>
-// #include <opencv2/objdetect/aruco_detector.hpp>
+#include "camera_info.hpp"
 
 using namespace std;
 using namespace cv;
 
-void generateMarker(){
-    cv::Mat markerImage;
-    cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(ARUCOTAG_DICTIONARY);
-    cv::aruco::generateImageMarker(dictionary, 23, 200, markerImage, 1);
-    cv::imwrite("marker42.png", markerImage);
-}
-
 void detectMarker(){
     const int camId = 0;
     const bool showRejected = false;
-    const bool estimatePose = false; // note: requires loading a calibration file specific to each camera
+    const bool estimatePose = true; // note: requires loading a calibration file specific to each camera
 
     constexpr float markerLengthInches = 2.0;
     constexpr float markerLength = markerLengthInches * 0.0254; // in meters
@@ -109,6 +100,5 @@ void detectMarker(){
 
 int main(){
     std::cout << "Starting pose estimation"<<std::endl;
-    generateMarker();
     detectMarker();
 }

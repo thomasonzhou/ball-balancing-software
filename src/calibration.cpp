@@ -7,6 +7,8 @@
 #include <opencv2/objdetect/charuco_detector.hpp>
 #include "aruco_samples_utility.hpp"
 
+#include "camera_info.hpp"
+
 using namespace std;
 using namespace cv;
 
@@ -18,17 +20,7 @@ const char* about =
         "  If input comes from video, press any key for next frame\n"
         "  To finish capturing, press 'ESC' key and calibration starts.\n";
 const char* keys  =
-        "{w        |       | Number of squares in X direction }"
-        "{h        |       | Number of squares in Y direction }"
-        "{sl       |       | Square side length (in meters) }"
-        "{ml       |       | Marker side length (in meters) }"
-        "{d        |       | dictionary: DICT_4X4_50=0, DICT_4X4_100=1, DICT_4X4_250=2,"
-        "DICT_4X4_1000=3, DICT_5X5_50=4, DICT_5X5_100=5, DICT_5X5_250=6, DICT_5X5_1000=7, "
-        "DICT_6X6_50=8, DICT_6X6_100=9, DICT_6X6_250=10, DICT_6X6_1000=11, DICT_7X7_50=12,"
-        "DICT_7X7_100=13, DICT_7X7_250=14, DICT_7X7_1000=15, DICT_ARUCO_ORIGINAL = 16}"
-        "{cd       |       | Input file with custom dictionary }"
         "{@outfile |cam.yml| Output file with calibrated camera parameters }"
-        "{v        |       | Input from video file, if ommited, input comes from camera }"
         "{ci       | 0     | Camera id if input doesnt come from video (-v) }"
         "{dp       |       | File of marker detector parameters }"
         "{rs       | false | Apply refind strategy }"
@@ -43,18 +35,9 @@ int main(int argc, char *argv[]) {
     CommandLineParser parser(argc, argv, keys);
     parser.about(about);
 
-    if(argc < 7) {
-        parser.printMessage();
-        return 0;
-    }
+    string outputFile = "calib.yml";
 
-    int squaresX = parser.get<int>("w");
-    int squaresY = parser.get<int>("h");
-    float squareLength = parser.get<float>("sl");
-    float markerLength = parser.get<float>("ml");
-    string outputFile = parser.get<string>(0);
-
-    bool showChessboardCorners = parser.get<bool>("sc");
+    bool showChessboardCorners = true;
 
     int calibrationFlags = 0;
     float aspectRatio = 1;
@@ -66,15 +49,11 @@ int main(int argc, char *argv[]) {
     if(parser.get<bool>("pc")) calibrationFlags |= CALIB_FIX_PRINCIPAL_POINT;
 
     aruco::DetectorParameters detectorParams = readDetectorParamsFromCommandLine(parser);
-    aruco::Dictionary dictionary = readDictionaryFromCommandLine(parser);
+    cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(ARUCOTAG_DICTIONARY);
 
     bool refindStrategy = parser.get<bool>("rs");
     int camId = parser.get<int>("ci");
     String video;
-
-    if(parser.has("v")) {
-        video = parser.get<String>("v");
-    }
 
     if(!parser.check()) {
         parser.printErrors();
@@ -134,7 +113,8 @@ int main(int argc, char *argv[]) {
             aruco::drawDetectedCornersCharuco(imageCopy, currentCharucoCorners, currentCharucoIds);
         }
 
-        putText(imageCopy, "Press 'c' to add current frame. 'ESC' to finish and calibrate",
+        std::string message = "Images taken: " + std::to_string(allImages.size()) + " Press 'c' to add current frame. 'ESC' to finish and calibrate";
+        putText(imageCopy, message,
                 Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(255, 0, 0), 2);
 
         imshow("out", imageCopy);
