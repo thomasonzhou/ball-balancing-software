@@ -14,6 +14,9 @@ void detectMarker(){
 
     cv::aruco::DetectorParameters detectorParams;
 
+    const int CORNER_REFINE_SUBPIX = 1;
+    detectorParams.cornerRefinementMethod = CORNER_REFINE_SUBPIX;
+
     const cv::aruco::Dictionary dictionary = cv::aruco::getPredefinedDictionary(ARUCOTAG_DICTIONARY);
 
     //! [aruco_pose_estimation1]
