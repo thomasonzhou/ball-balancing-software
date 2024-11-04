@@ -1,9 +1,13 @@
 import numpy as np
 import pytest
-from kinematics.motor import MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
-from kinematics.plate_kinematics import (
+from kinematics.motor import (
+        MOTOR_LEG_LENGTH, 
+        PLATE_LEG_LENGTH, 
+        MOTOR_DIST_FROM_ORIGIN, 
+        PLATE_DIST_FROM_ORIGIN
+)
+from python.kinematics.plate_kinematics import (
     UNIT_K, 
-    PIBI_LENGTH, 
     calculate_angle_from_cosine, 
     calculate_theta_phi_from_N, 
     calculate_xy_rotation_matrix, 
@@ -27,29 +31,31 @@ KNOWN_N_ANGLE_PAIR = {
             "known_angles": np.round(np.array([5 * np.pi / 180, 5 * np.pi / 180]), ROUND_DECIMALS)
         }
     }
-T = np.round(np.sqrt(np.square(MOTOR_LEG_LENGTH) + np.square(PLATE_LEG_LENGTH)), ROUND_DECIMALS)
+T = 8
 KNOWN_LI_ANGLE_PAIR = {
     "zero": {
             "known_T": np.array([0, 0, T]),
-            "known_li": np.array([0, 0, T]),
+            "known_li": np.array([0, PLATE_DIST_FROM_ORIGIN-MOTOR_DIST_FROM_ORIGIN, T]),
             "known_angles": (0, 0),
-            "known_pibi": (0, PIBI_LENGTH, 0)
+            "known_pi": (0, PLATE_DIST_FROM_ORIGIN, 0),
+            "known_bi": (0, MOTOR_DIST_FROM_ORIGIN, 0),
         },
     "five": {
             "known_T": np.array([0, 0, T]),
-            "known_li": np.array([0.038, -0.019, 7.142]),
+            "known_li": np.array([0.114, 2.943, 9.302]),
             "known_angles": np.array([5 * np.pi / 180, 5 * np.pi / 180]),
-            "known_pibi": (0, PIBI_LENGTH, 0)
+            "known_pi": (0, PLATE_DIST_FROM_ORIGIN, 0),
+            "known_bi": (0, MOTOR_DIST_FROM_ORIGIN, 0),
     }
 }
 KNOWN_MOTOR_ANGLE_PAIR = {
     "zero": {
-            "known_li": np.array([0, 0, T]),
-            "known_abs_angle": np.round(np.pi/2 - np.arctan(PLATE_LEG_LENGTH/MOTOR_LEG_LENGTH), ROUND_DECIMALS)
+            "known_li": np.array([0, PLATE_DIST_FROM_ORIGIN-MOTOR_DIST_FROM_ORIGIN, T]),
+            "known_abs_angle": np.round(2.89340950562 * np.pi / 180, ROUND_DECIMALS)
         },
     "five": {
-            "known_li": np.array([0.038, -0.019, 7.142]),
-            "known_abs_angle": np.round(33.722 * np.pi / 180, ROUND_DECIMALS)
+            "known_li": np.array([0.114, 2.943, 9.302]),
+            "known_abs_angle": np.round(17.606 * np.pi / 180, ROUND_DECIMALS)
     }
 }
 
@@ -96,8 +102,8 @@ def test_calculate_li():
             T=value["known_T"], 
             theta_y=value["known_angles"][0], 
             phi_x=value["known_angles"][1], 
-            pi_plat=value["known_pibi"], 
-            bi=value["known_pibi"]
+            pi_plat=value["known_pi"], 
+            bi=value["known_bi"]
         )
         li = np.round(li, ROUND_DECIMALS)
         for known_li_el, output_li_el in zip(value["known_li"], np.round(li, ROUND_DECIMALS)):
@@ -110,3 +116,6 @@ def test_calculate_abs_motor_angle_from_li():
         angle = calculate_abs_motor_angle_from_li(value["known_li"])
         angle = np.round(angle, ROUND_DECIMALS)
         assert value["known_abs_angle"] == angle
+
+if __name__ == "__main__":
+    test_calculate_li()

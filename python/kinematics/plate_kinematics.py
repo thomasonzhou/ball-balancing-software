@@ -4,8 +4,8 @@ import numpy as np
 import numpy.typing as npt
 from kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
 
-### Can be changed
-PIBI_LENGTH = 5
+DEFAULT_PLATE_HEIGHT = 8 # cm, rel to shaft
+
 # See `motor_orientations.png`
 MOTOR_ORIENTATIONS = [
     np.pi/2, # Motor A: along the y-axis
@@ -112,22 +112,18 @@ def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     gamma = np.pi/2 - beta - alpha
     return gamma
 
+if __name__ == "__main__":
+    ### Default Configuration Setup
+    # DEFAULT VARIABLES DEFINING SETUP AND REST STATE
+    T = np.array([0, 0, DEFAULT_PLATE_HEIGHT]) # from the middle of the base of the motor mounts to the middle of the plate
+    N = np.array([0, 0, 1]) # normal vector of plate
 
-### Default Configuration Setup
-# DEFAULT VARIABLES DEFINING SETUP AND REST STATE
-# At rest, the shaft and plate legs will be perpendicular. See li (start) from `motorA_at_rest.png`.
-li_start = np.sqrt(np.square(MOTOR_LEG_LENGTH) + np.square(PLATE_LEG_LENGTH))
-T = np.array([0, 0, li_start]) # from the middle of the base of the motor mounts to the middle of the plate
-N = np.array([0, 0, 1]) # normal vector of plate
-
-# From here, the pipeline is:
-# T - something
-# N - something
-motors = [Motor(orientation, distance=PIBI_LENGTH) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
-phi_x, theta_y = calculate_theta_phi_from_N(N)
-for motor in motors:
-    li = calculate_li(T, theta_y, phi_x, pi_plat=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
-    abs_angle = calculate_abs_motor_angle_from_li(li)
-    motor.set_desired_angle(abs_angle)
+    # From here, the pipeline is:
+    motors = [Motor(orientation) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
+    phi_x, theta_y = calculate_theta_phi_from_N(N)
+    for motor in motors:
+        li = calculate_li(T, theta_y, phi_x, pi_plat=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
+        abs_angle = calculate_abs_motor_angle_from_li(li)
+        motor.set_desired_angle(abs_angle)
 
 
