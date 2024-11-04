@@ -158,13 +158,15 @@ if __name__ == "__main__":
     # DEFAULT VARIABLES DEFINING SETUP AND REST STATE
     T = np.array([0, 0, DEFAULT_PLATE_HEIGHT]) # from the middle of the base of the motor mounts to the middle of the plate
     N = np.array([0, 0, 1]) # normal vector of plate
+    print(f"Default configuration: T-{T}, N-{N}")
 
     # From here, the pipeline is:
     motors = [Motor(orientation) for orientation in MOTOR_ORIENTATIONS] # initializes motors a, b, c
     phi_x, theta_y = calculate_theta_phi_from_N(N)
-    for motor in motors:
+    for i, motor in enumerate(motors):
         li = calculate_li(T, theta_y, phi_x, pi_plat=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
         abs_angle = calculate_abs_motor_angle_from_li(li)
         motor.set_desired_angle(abs_angle)
+        print(f"Motor {i+1} angle: {np.round(abs_angle, 4)} rad, {np.round(abs_angle * 180 / np.pi, 0)} deg")
 
 
