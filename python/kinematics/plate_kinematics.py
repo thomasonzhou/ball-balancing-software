@@ -16,6 +16,40 @@ MOTOR_ORIENTATIONS = [
 # HELPER CONSTANTS
 UNIT_K = np.array([0, 0, 1])
 
+def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArray:
+    """Helper function to calculate the normal vector of the place given a direction and magnitude
+
+    Uses the Rodrigues rotation formula: https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+    
+    Args:
+        dir_vec (2 float): Direction vector describing the tilt, on the x-y plane
+        mag: How much to tilt the plate, in radians
+    
+    Returns:
+        3 float vector: The normal to the plate
+    """
+    
+    # First, determine the axis of rotation. This is orthogonal to the dir_vec, in the x-y plane.
+    # Recall that two vectors are orthogonal if their dot product is zero.
+
+    rot_axis = np.array([dir_vec[0], -dir_vec[1], 0])
+    rot_axis_norm = rot_axis / np.linalg.norm(rot_axis)
+
+    # Rotate the direction vector about the orthogonal axis, with a angle of `mag` degrees
+    dir_vec_rot = ( # Rodrigues rotation formula
+        dir_vec * np.cos(mag) + 
+        np.cross(rot_axis_norm, dir_vec) * np.sin(mag) + 
+        rot_axis_norm * (np.dot(rot_axis_norm, dir_vec)) * (1 - np.cos(mag))
+    )
+
+    N = np.cross(rot_axis_norm, dir_vec_rot)
+
+    # Always ensuring the vector is pointing in positive Z
+    if N[2] < 0:
+        N = N * -1
+
+    return N
+
 
 def calculate_xy_rotation_matrix(theta_y: float, phi_x: float) -> npt.NDArray:
     """Helper function to calculate the xy rotation matrix
