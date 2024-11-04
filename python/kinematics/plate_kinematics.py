@@ -32,7 +32,13 @@ def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArr
     # First, determine the axis of rotation. This is orthogonal to the dir_vec, in the x-y plane.
     # Recall that two vectors are orthogonal if their dot product is zero.
 
-    rot_axis = np.array([dir_vec[0], -dir_vec[1], 0])
+    # Add this, else, normalizing with a norm of 0 will give NaNs everywhere + redundant code if no movement
+    if np.all(dir_vec==0):
+        return UNIT_K
+    if mag == 0:
+        return UNIT_K
+
+    rot_axis = np.array([-dir_vec[1], dir_vec[0], 0])
     rot_axis_norm = rot_axis / np.linalg.norm(rot_axis)
 
     # Rotate the direction vector about the orthogonal axis, with a angle of `mag` degrees
@@ -41,8 +47,9 @@ def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArr
         np.cross(rot_axis_norm, dir_vec) * np.sin(mag) + 
         rot_axis_norm * (np.dot(rot_axis_norm, dir_vec)) * (1 - np.cos(mag))
     )
+    dir_vec_rot_norm = dir_vec_rot / np.linalg.norm(dir_vec_rot)
 
-    N = np.cross(rot_axis_norm, dir_vec_rot)
+    N = np.cross(rot_axis_norm, dir_vec_rot_norm)
 
     # Always ensuring the vector is pointing in positive Z
     if N[2] < 0:
