@@ -24,4 +24,3 @@ class Motor:
 
     def set_desired_angle(self, angle: float):
         self.desired_angle = angle
-

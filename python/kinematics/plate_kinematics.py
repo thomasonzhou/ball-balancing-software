@@ -157,7 +157,7 @@ if __name__ == "__main__":
     ### Default Configuration Setup
     # DEFAULT VARIABLES DEFINING SETUP AND REST STATE
     T = np.array([0, 0, DEFAULT_PLATE_HEIGHT]) # from the middle of the base of the motor mounts to the middle of the plate
-    N = np.array([0, 0, 1]) # normal vector of plate
+    N = calculate_normal_from_dir_vec(np.array([0,0,0]), 0) # at rest
     print(f"Default configuration: T-{T}, N-{N}")
 
     # From here, the pipeline is:
@@ -168,5 +168,3 @@ if __name__ == "__main__":
         abs_angle = calculate_abs_motor_angle_from_li(li)
         motor.set_desired_angle(abs_angle)
         print(f"Motor {i+1} angle: {np.round(abs_angle, 4)} rad, {np.round(abs_angle * 180 / np.pi, 0)} deg")
-
-
