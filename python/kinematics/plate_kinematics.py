@@ -45,7 +45,7 @@ def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArr
     dir_vec_rot = ( # Rodrigues rotation formula
         dir_vec * np.cos(mag) + 
         np.cross(rot_axis_norm, dir_vec) * np.sin(mag) + 
-        rot_axis_norm * (np.dot(rot_axis_norm, dir_vec)) * (1 - np.cos(mag))
+        rot_axis_norm * np.dot(rot_axis_norm, dir_vec) * (1 - np.cos(mag))
     )
 
     # Normalize the rotated direction vector

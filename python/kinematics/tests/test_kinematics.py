@@ -17,7 +17,7 @@ from kinematics.plate_kinematics import (
 # Run all tests using `pytest`, or try `pytest -m helper`, `pytest -m stew`
 
 ### ALL `KNOWN` VALUES HAVE BEEN HAND-CALCULATED. ROUNDED TO 3 DECIMAL PLACES.
-# See `diagrams/kinematics_test_values.png` for math background.
+# See `diagrams/MTE_380_Rotation_Equations.pdf` for math background.
 
 ROUND_DECIMALS = 3
 T = 8
@@ -98,7 +98,7 @@ def test_calculate_cosine():
 @pytest.mark.stew
 def test_calculate_N():
     """Tests the calculation of the normal angle given a direction and magnitude of movement"""
-    for _, value in KNOWN_VEC_MAG_N_PAIR.items():
+    for value in KNOWN_VEC_MAG_N_PAIR.values():
         N = np.round(calculate_normal_from_dir_vec(value["known_dir"], value["known_mag"]), ROUND_DECIMALS)
         for known_N_el, output_N_el in zip(value["known_N"], N):
             assert known_N_el == output_N_el
@@ -107,7 +107,7 @@ def test_calculate_N():
 @pytest.mark.stew
 def test_calculate_theta_phi_from_N():
     """Tests the calculation of the tilt angles given a normal vector"""
-    for _, value in KNOWN_N_ANGLE_PAIR.items():
+    for value in KNOWN_N_ANGLE_PAIR.values():
         angles = np.round(calculate_theta_phi_from_N(value["known_N"]), ROUND_DECIMALS)
         for known_angle, output_angle in zip(value["known_angles"], angles):
             assert known_angle == output_angle
@@ -116,8 +116,8 @@ def test_calculate_theta_phi_from_N():
 @pytest.mark.helper
 def test_calculate_xy_rotation_matrix():
     """Tests the calculation of the right rotation matrix given tilt angles"""
-    for _, value in KNOWN_N_ANGLE_PAIR.items():
-        rotMat = calculate_xy_rotation_matrix(value["known_angles"][0], value["known_angles"][1])
+    for value in KNOWN_N_ANGLE_PAIR.values():
+        rotMat = calculate_xy_rotation_matrix(*value["known_angles"])
         rotated_N = rotMat @ UNIT_K
         for known_N_el, output_N_el in zip(value["known_N"], np.round(rotated_N, ROUND_DECIMALS)):
             assert known_N_el == output_N_el
@@ -126,7 +126,7 @@ def test_calculate_xy_rotation_matrix():
 @pytest.mark.stew
 def test_calculate_li():
     """Tests the calculation of the li vector given tilt angles"""
-    for _, value in KNOWN_LI_ANGLE_PAIR.items():
+    for value in KNOWN_LI_ANGLE_PAIR.values():
         li = calculate_li(
             T=value["known_T"], 
             theta_y=value["known_angles"][0], 
@@ -142,7 +142,7 @@ def test_calculate_li():
 @pytest.mark.stew
 def test_calculate_abs_motor_angle_from_li():
     """Tests the calulation of the absolute motor angle given vector li"""
-    for _, value in KNOWN_MOTOR_ANGLE_PAIR.items():
+    for value in KNOWN_MOTOR_ANGLE_PAIR.values():
         angle = calculate_abs_motor_angle_from_li(value["known_li"])
         angle = np.round(angle, ROUND_DECIMALS)
         assert value["known_abs_angle"] == angle
