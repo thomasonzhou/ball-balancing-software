@@ -29,24 +29,26 @@ def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArr
         3 float vector: The normal to the plate
     """
     
-    # First, determine the axis of rotation. This is orthogonal to the dir_vec, in the x-y plane.
-    # Recall that two vectors are orthogonal if their dot product is zero.
-
     # Add this, else, normalizing with a norm of 0 will give NaNs everywhere + redundant code if no movement
     if np.all(dir_vec==0):
         return UNIT_K
     if mag == 0:
         return UNIT_K
 
+    # First, determine the axis of rotation. This is orthogonal to the dir_vec, in the x-y plane.
+    # Recall that two vectors are orthogonal if their dot product is zero.
+
     rot_axis = np.array([-dir_vec[1], dir_vec[0], 0])
     rot_axis_norm = rot_axis / np.linalg.norm(rot_axis)
 
-    # Rotate the direction vector about the orthogonal axis, with a angle of `mag` degrees
+    # Rotate the direction vector about the orthogonal axis, with an angle of `mag` degrees
     dir_vec_rot = ( # Rodrigues rotation formula
         dir_vec * np.cos(mag) + 
         np.cross(rot_axis_norm, dir_vec) * np.sin(mag) + 
         rot_axis_norm * (np.dot(rot_axis_norm, dir_vec)) * (1 - np.cos(mag))
     )
+
+    # Normalize the rotated direction vector
     dir_vec_rot_norm = dir_vec_rot / np.linalg.norm(dir_vec_rot)
 
     N = np.cross(rot_axis_norm, dir_vec_rot_norm)
