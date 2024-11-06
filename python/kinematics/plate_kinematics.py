@@ -92,7 +92,7 @@ def calculate_angle_from_cosine(a: float, b: float, c: float) -> float:
 
 def calculate_theta_phi_from_N(N: npt.NDArray) -> tuple[float, float]:
     """Given the normal vector of the plate, find the tilt about the x and y axis.
-    See `rotation_math.png` for more details.
+    See `MTE380_Rotation_Equations.pdf` for more details.
     
     Args:
         N (3 float vector): The normal vector with the desired plate tilt
@@ -110,7 +110,7 @@ def calculate_theta_phi_from_N(N: npt.NDArray) -> tuple[float, float]:
 def calculate_li(T: npt.NDArray, theta_y: float, phi_x: float, pi_plat: npt.NDArray, bi: npt.NDArray) -> npt.NDArray:
     """Calculate the vector between the plate mount and the motor mount, for any motor. The configuration of the 
     mounting on the plate, and the mounting of the motor, is described with pi and bi respectively. 
-    See `rotation_math.png` for more details.
+    See `MTE380_Rotation_Equations.pdf` for more details.
 
     Args:
         T (3 float vector): The vector with mag/dir between the center of the motor mounts, and the center of the plate
@@ -134,8 +134,7 @@ def calculate_li(T: npt.NDArray, theta_y: float, phi_x: float, pi_plat: npt.NDAr
 
 def calculate_abs_motor_angle_from_li(li: npt.NDArray) -> float:
     """Given li (vector between the plate mount and the motor mount) for any motor, calculate the absolute angle of the 
-    motor. This is with reference to the axis of the motor = 0. See angles from `relative_motor_angle.png` and 
-    `absolute_motor_angle.png`.
+    motor. This is with reference to the axis of the motor = 0. See `MTE380_Rotation_Equations.pdf` for more details.
     
     Args:
         li (3 float vector): The vector from the motor mount -> plate mount
