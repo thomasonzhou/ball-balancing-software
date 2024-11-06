@@ -7,7 +7,9 @@ name = "mte380_python_software"
 description = "MTE380 Python Software"
 version = "0.0.1"
 dependencies = [
-  "numpy"
+  "numpy",
+  "pytest",
+  "time"
 ]
 requires-python = ">= 3.10"
 authors = [
