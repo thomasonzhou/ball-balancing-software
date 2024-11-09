@@ -17,7 +17,7 @@ Clone the github repos for:
 Build using CMake. Optionally, you can add `-G Ninja` to build more quickly (if you have it installed).
 
 ```bash
-cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib-4.x/modules ../opencv-4.x
+cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules ../opencv
 cmake --build .
 ```
 

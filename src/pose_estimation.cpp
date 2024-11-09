@@ -9,9 +9,6 @@ void detectMarker(){
     const bool showRejected = false;
     const bool estimatePose = true; // note: requires loading a calibration file specific to each camera
 
-    constexpr float markerLengthInches = 2.0;
-    constexpr float markerLength = markerLengthInches * 0.0254; // in meters
-
     cv::aruco::DetectorParameters detectorParams;
 
     const int CORNER_REFINE_SUBPIX = 1;
@@ -37,15 +34,14 @@ void detectMarker(){
     waitTime = 10;
 
     double totalTime = 0;
-    int totalIterations = 0;
 
     //! [aruco_pose_estimation2]
     // set coordinate system
     cv::Mat objPoints(4, 1, CV_32FC3);
-    objPoints.ptr<Vec3f>(0)[0] = Vec3f(-markerLength/2.f, markerLength/2.f, 0);
-    objPoints.ptr<Vec3f>(0)[1] = Vec3f(markerLength/2.f, markerLength/2.f, 0);
-    objPoints.ptr<Vec3f>(0)[2] = Vec3f(markerLength/2.f, -markerLength/2.f, 0);
-    objPoints.ptr<Vec3f>(0)[3] = Vec3f(-markerLength/2.f, -markerLength/2.f, 0);
+    objPoints.ptr<Vec3f>(0)[0] = Vec3f(-MARKER_LENGTH_METERS/2.f, MARKER_LENGTH_METERS/2.f, 0);
+    objPoints.ptr<Vec3f>(0)[1] = Vec3f(MARKER_LENGTH_METERS/2.f, MARKER_LENGTH_METERS/2.f, 0);
+    objPoints.ptr<Vec3f>(0)[2] = Vec3f(MARKER_LENGTH_METERS/2.f, -MARKER_LENGTH_METERS/2.f, 0);
+    objPoints.ptr<Vec3f>(0)[3] = Vec3f(-MARKER_LENGTH_METERS/2.f, -MARKER_LENGTH_METERS/2.f, 0);
     //! [aruco_pose_estimation2]
 
     while(inputVideo.grab()) {
@@ -73,11 +69,7 @@ void detectMarker(){
         //! [aruco_pose_estimation3]
         double currentTime = ((double)getTickCount() - tick) / getTickFrequency();
         totalTime += currentTime;
-        totalIterations++;
-        if(totalIterations % 30 == 0) {
-            cout << "Detection Time = " << currentTime * 1000 << " ms "
-                 << "(Mean = " << 1000 * totalTime / double(totalIterations) << " ms)" << endl;
-        }
+     
         //! [aruco_draw_pose_estimation]
         // draw results
         image.copyTo(imageCopy);
@@ -85,8 +77,15 @@ void detectMarker(){
             cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
 
             if(estimatePose) {
-                for(unsigned int i = 0; i < ids.size(); i++)
-                    cv::drawFrameAxes(imageCopy, camMatrix, distCoeffs, rvecs[i], tvecs[i], markerLength * 1.5f, 2);
+                for(unsigned int i = 0; i < ids.size(); i++) {
+                    cv::drawFrameAxes(imageCopy, camMatrix, distCoeffs, rvecs[i], tvecs[i], MARKER_LENGTH_METERS * 1.5f, 2);
+                    if (ids[i] == MARKER_NUMBER){
+                        cout<<"Detection Time: " << currentTime * 1000 <<"ms"
+                        << "\nMarker found: " << ids[i] 
+                        << "\nrvec: " << rvecs[i] 
+                        << "\ntvec: " << tvecs[i] << endl;
+                    }
+                }
             }
         }
         //! [aruco_draw_pose_estimation]

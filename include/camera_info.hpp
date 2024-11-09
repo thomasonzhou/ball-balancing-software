@@ -9,6 +9,14 @@ const std::string CAMERA_PARAMS_FILE = "macbook_calib.yml";
 // Charuco board specs
 const int squaresX = 5;
 const int squaresY = 7;
-constexpr int squareLength = 100;
-constexpr int markerLength = 60;
+
+constexpr double CHARUCO_SQUARE_PIXELS = 100;
+constexpr double CHARUCO_MARKER_PIXELS = 60;
+
+constexpr float MARKER_LENGTH_INCHES = 2.0;
+constexpr float MARKER_LENGTH_METERS = MARKER_LENGTH_INCHES * 0.0254; // in meters
+
+constexpr int MARKER_NUMBER = 23;
+constexpr double CAMERA_TO_SHAFT_HEIGHT = 0.06; //meters
+
 #endif
