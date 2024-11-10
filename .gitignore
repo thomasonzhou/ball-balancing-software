@@ -2,4 +2,5 @@
 build/
 mte380_python_software.egg-info/
 __pycache__/
-bin
+bin/*
+!bin/homing.py
