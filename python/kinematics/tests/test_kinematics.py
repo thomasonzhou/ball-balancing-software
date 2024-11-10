@@ -56,7 +56,7 @@ KNOWN_LI_ANGLE_PAIR = {
         },
     "five": { # deg
             "known_T": np.array([0, 0, T]),
-            "known_li": np.array([0.114, 2.943, 9.302]),
+            "known_li": np.array([0.114, 3.943, 9.302]),
             "known_angles": np.array([5 * np.pi / 180, 5 * np.pi / 180]),
             "known_pi": (0, PLATE_DIST_FROM_ORIGIN, 0),
             "known_bi": (0, MOTOR_DIST_FROM_ORIGIN, 0),
@@ -66,11 +66,11 @@ KNOWN_LI_ANGLE_PAIR = {
 KNOWN_MOTOR_ANGLE_PAIR = {
     "zero": {
             "known_li": np.array([0, PLATE_DIST_FROM_ORIGIN-MOTOR_DIST_FROM_ORIGIN, T]),
-            "known_abs_angle": np.round(2.89340950562 * np.pi / 180, ROUND_DECIMALS)
+            "known_abs_angle": np.round(0.718468376691 * np.pi / 180, ROUND_DECIMALS)
         },
     "five": { # deg
-            "known_li": np.array([0.114, 2.943, 9.302]),
-            "known_abs_angle": np.round(17.606 * np.pi / 180, ROUND_DECIMALS)
+            "known_li": np.array([0.114, 3.943, 9.302]),
+            "known_abs_angle": np.round(15.662 * np.pi / 180, ROUND_DECIMALS)
     }
 }
 
