@@ -1,6 +1,8 @@
 import serial
 import time
 
+from parse_process import parse_coord
+
 # Configuration for COM ports
 input_com_port = 'COM8'
 output_com_port = 'COM5'
@@ -22,15 +24,18 @@ try:
             try:
                 # Decode the data as ASCII and strip any extraneous line endings
                 decoded_data = data.decode('ascii').strip()
-                
-                # Debug: Show received and decoded data
-                print(f"RX Raw: {data}")
+                # Parse the input x and y coordinates
+                input_coord = parse_coord(decoded_data)
+                if input_coord:
+                    input_x, input_y = input_coord
+                    print(f"RX: X={input_x}, Y={input_y}")
+
                 
                 # Re-encode and send the ASCII-decoded data over the output port
-                ser_out.write(decoded_data.encode('ascii'))  # Add line endings if needed
+                # ser_out.write(decoded_data.encode('ascii'))  # Add line endings if needed
 
                 # Debug: Confirm data was sent
-                print(f"TX ASCII Encoded: {decoded_data}")
+                # print(f"TX ASCII Encoded: {decoded_data}")
             except UnicodeDecodeError:
                 print("non-ASCII data")
 
@@ -43,4 +48,4 @@ finally:
     # Close the ports on exit
     ser_in.close()
     ser_out.close()
-    print("Exit")
+    print("Ports Closed")
