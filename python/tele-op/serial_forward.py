@@ -1,14 +1,17 @@
 import serial
 import time
 
-from parse_process import parse_coord
+from parse_process import parse_coord, ascii_encode
+from pid.position_feedback import Controller
 
-# Configuration for COM ports
+pid = Controller()
+desired_coord = (0,0)
+dir_x, dir_y, theta_mag = 0,0,0
+
 input_com_port = 'COM8'
 output_com_port = 'COM5'
 baudrate = 115200
 
-# Open the input and output serial ports
 try:
     ser_in = serial.Serial(input_com_port, baudrate, timeout=1)
     ser_out = serial.Serial(output_com_port, baudrate, timeout=1)
@@ -18,24 +21,27 @@ except serial.SerialException as e:
 
 try:
     while True:
-        # Read from the input port
         if ser_in.in_waiting > 0:
-            data = ser_in.read(ser_in.in_waiting)  # Read incoming bytes
+            data = ser_in.read(ser_in.in_waiting)
             try:
-                # Decode the data as ASCII and strip any extraneous line endings
                 decoded_data = data.decode('ascii').strip()
-                # Parse the input x and y coordinates
-                input_coord = parse_coord(decoded_data)
-                if input_coord:
-                    input_x, input_y = input_coord
-                    print(f"RX: X={input_x}, Y={input_y}")
+                actual_coord = parse_coord(decoded_data)
+                if actual_coord:
+                    actual_x, actual_y = actual_coord
+                    print(f"RX: {decoded_data}")
+                    
+                    # Calulate control signal
+                    (dir_x, dir_y, theta_mag) = pid.calculate(desired_coord, actual_coord)
+                # else:
+                #     dir_x, dir_y, theta_mag = 0,0,0
 
-                
                 # Re-encode and send the ASCII-decoded data over the output port
-                # ser_out.write(decoded_data.encode('ascii'))  # Add line endings if needed
+                    motor_output = ascii_encode((dir_x, dir_y, theta_mag))
+                    ser_out.write(motor_output)
 
-                # Debug: Confirm data was sent
-                # print(f"TX ASCII Encoded: {decoded_data}")
+                    # Debug: Confirm data was sent
+                    print(f"TX: {motor_output.decode('ascii')}")
+                
             except UnicodeDecodeError:
                 print("non-ASCII data")
 
@@ -45,7 +51,6 @@ except KeyboardInterrupt:
     print("Keyboard Interrupt")
 
 finally:
-    # Close the ports on exit
     ser_in.close()
     ser_out.close()
     print("Ports Closed")
