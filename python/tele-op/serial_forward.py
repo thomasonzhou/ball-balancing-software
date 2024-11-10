@@ -20,6 +20,41 @@ except serial.SerialException as e:
     print(f"Error: {e}")
     exit(1)
 
+while True:
+    if ser_in.in_waiting > 0:
+        input_data = ser_in.read(ser_in.in_waiting)
+        try:
+            # Decode the data as ASCII and strip extraneous characters
+            decoded_data = input_data.decode('ascii').strip()
+            
+            # Check if the message is "<t, 0, 0, 0>"
+            if decoded_data == "<t, 0, 0, 0>":
+                print("Received 'TARE' Command")
+                ser_out.write((decoded_data + '\r\n').encode('ascii'))
+                break
+
+        except UnicodeDecodeError:
+            print("non-ASCII data")
+            
+    time.sleep(0.01)
+
+received_message = ""
+while True:
+    if ser_out.in_waiting > 0:
+        output_data = ser_out.read(ser_out.in_waiting)
+        try:
+            # Decode the data as ASCII and strip extraneous characters
+            received_message += output_data.decode('ascii').strip()
+
+            # Check if "TARE" is received
+            if "TARE" in received_message:
+                print("Received 'TARE' Confirmation")
+                break
+        except UnicodeDecodeError:
+            print("non-ASCII data")
+
+    time.sleep(0.01)
+
 try:
     while True:
         if ser_in.in_waiting > 0:
