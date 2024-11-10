@@ -9,7 +9,6 @@ version = "0.0.1"
 dependencies = [
   "numpy",
   "pytest",
-  "time",
   "pyserial"
 ]
 requires-python = ">= 3.10"
@@ -18,4 +17,4 @@ authors = [
 ]
 
 [tool.setuptools]
-packages = ["kinematics", "tele-op"]
+packages = ["kinematics", "tele-op", "pid"]
