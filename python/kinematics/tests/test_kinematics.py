@@ -24,12 +24,12 @@ T = 8
 
 KNOWN_VEC_MAG_N_PAIR = {
     "zero": {
-        "known_dir": np.array([0, 0, 0]),
+        "known_dir": np.array([0, 0]),
         "known_mag": 0,
         "known_N": [0, 0, 1]
     },
     "five": { # deg
-        "known_dir": np.array([1, 0, 0]),
+        "known_dir": np.array([1, 0]),
         "known_mag": np.round(5 * np.pi / 180, ROUND_DECIMALS),
         "known_N": np.array([0.087, 0, 0.996])
     }
