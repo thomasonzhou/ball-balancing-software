@@ -2,7 +2,7 @@
 
 import numpy as np
 import numpy.typing as npt
-from kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
+from motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
 
 DEFAULT_PLATE_HEIGHT = 8 # cm, rel to shaft
 
@@ -26,7 +26,7 @@ def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArr
         mag: How much to tilt the plate, in radians
     
     Returns:
-        3 float vector: The normal to the plate
+        3 float vector: The normal to the plate (normalized)
     """
     
     # Add this, else, normalizing with a norm of 0 will give NaNs everywhere + redundant code if no movement
