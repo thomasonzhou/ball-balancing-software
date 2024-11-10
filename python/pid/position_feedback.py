@@ -1,13 +1,12 @@
 import math
 
 class Controller:
-    def __init__(self, kp, kd, ki, dt):
-        # Define PID gains and time interval
-        self.kp = kp
-        self.kd = kd
-        self.ki = ki
-        self.dt = dt 
-
+    # Define PID gains and time interval
+    kp = 1.0
+    ki = 0.1
+    kd = 0.05
+    dt = 0.1
+    def __init__(self):
         self.prev_e_x = 0
         self.prev_e_y = 0
         self.int_x = 0
