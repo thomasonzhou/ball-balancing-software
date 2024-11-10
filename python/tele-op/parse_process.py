@@ -15,5 +15,5 @@ def parse_coord(data):
     
 def ascii_encode(motor_angles):
     a, b, c = motor_angles
-    return f"<{a:.2f}, {b:.2f}, {c:.2f}>".encode('ascii')
+    return f"<a, {a:.2f}, {b:.2f}, {c:.2f}>".encode('ascii')
 
