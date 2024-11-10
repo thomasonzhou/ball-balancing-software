@@ -1,6 +1,6 @@
 """Module for the kinematics pipeline for tele-op"""
 
-from plate_kinematics import *
+from kinematics.plate_kinematics import *
 
 def get_plate_height():
     # File I/O based on Thomason's CV binary
