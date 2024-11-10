@@ -1,4 +1,3 @@
 numpy
 pytest
-time
 pyserial
