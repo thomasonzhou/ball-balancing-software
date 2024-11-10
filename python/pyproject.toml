@@ -16,4 +16,4 @@ authors = [
 ]
 
 [tool.setuptools]
-packages = ["kinematics", "controller"]
+packages = ["kinematics", "hlc"]
