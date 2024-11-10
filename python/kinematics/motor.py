@@ -2,7 +2,7 @@ import numpy as np
 
 MOTOR_LEG_LENGTH = 5 # cm
 PLATE_LEG_LENGTH = 8 # cm
-MOTOR_DIST_FROM_ORIGIN = 12 # cm
+MOTOR_DIST_FROM_ORIGIN = 11 # cm
 PLATE_DIST_FROM_ORIGIN = 15 # cm
 
 class Motor:
