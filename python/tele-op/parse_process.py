@@ -12,5 +12,8 @@ def parse_coord(data):
     else:
         print("Data format error")
         return None
-
+    
+def ascii_encode(motor_angles):
+    a, b, c = motor_angles
+    return f"<{a:.2f}, {b:.2f}, {c:.2f}>".encode('ascii')
 
