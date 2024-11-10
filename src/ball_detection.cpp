@@ -7,12 +7,15 @@ using namespace std;
 using namespace cv;
 
 
-const int cannyThresholdInitialValue = 50;
-const int accumulatorThresholdInitialValue = 15;
-const int maxAccumulatorThreshold = 100;
-const int maxCannyThreshold = 125;
+const int cannyThresholdInitialValue = 100;
+const int accumulatorThresholdInitialValue = 30;
+const int maxCannyThreshold = 400;
+const int maxAccumulatorThreshold = 200;
+const string windowName = "Hough transform";
+const string cannyTrackbarName = "Canny Edge Threshold";
+const string accumulatorTrackbarName = "Accumulator Threshold";
 
-void HoughDetection(const string windowName, const Mat& src_gray, Mat& src_display, int cannyThreshold, int accumulatorThreshold)
+void HoughDetection(const Mat& src_gray, Mat& src_display, int cannyThreshold, int accumulatorThreshold)
 {
     std::vector<Vec3f> circles;
     HoughCircles(src_gray, circles, HOUGH_GRADIENT, 1, src_gray.rows / 8, cannyThreshold, accumulatorThreshold, 0, 0);
@@ -24,6 +27,7 @@ void HoughDetection(const string windowName, const Mat& src_gray, Mat& src_displ
         int radius = cvRound(circles[i][2]);
         circle(display, center, 3, Scalar(0, 255, 0), -1, 8, 0);
         circle(display, center, radius, Scalar(0, 0, 255), 3, 8, 0);
+        cout << circles[i][0] << ", " << circles[i][1] << endl;
     }
 
     putText(display, "Circles detected: " + to_string(circles.size()), Point(10, 30),
@@ -32,7 +36,6 @@ void HoughDetection(const string windowName, const Mat& src_gray, Mat& src_displ
     imshow(windowName, display);
 }
 
-const string windowName = "Hough transform";
 int main(int argc, char** argv)
 {
     Mat frame, src_gray, display;
@@ -48,15 +51,16 @@ int main(int argc, char** argv)
     namedWindow(windowName, WINDOW_AUTOSIZE);
     int cannyThreshold = cannyThresholdInitialValue;
     int accumulatorThreshold = accumulatorThresholdInitialValue;
-    createTrackbar("Canny Edge Threshold", windowName, &cannyThreshold, maxCannyThreshold);
-    createTrackbar("Accumulator Threshold", windowName, &accumulatorThreshold, maxAccumulatorThreshold);
+    
+    createTrackbar(cannyTrackbarName, windowName, &cannyThreshold, maxCannyThreshold);
+    createTrackbar(accumulatorTrackbarName, windowName, &accumulatorThreshold, maxAccumulatorThreshold);
 
     while (true)
     {
         bool ret = cap.read(frame);
         if (!ret)
         {
-            cerr << "Error: Failed to capture frame from video stream.\n";
+            cerr << "Error: Couldn't capture video frame.\n";
             break;
         }
 
@@ -67,7 +71,8 @@ int main(int argc, char** argv)
         accumulatorThreshold = max(accumulatorThreshold, 1);
         cout << "Canny: " << cannyThreshold << " Accumulator: " << accumulatorThreshold << endl;
 
-        HoughDetection(windowName, src_gray, frame, cannyThreshold, accumulatorThreshold);
+        HoughDetection(src_gray, frame, cannyThreshold, accumulatorThreshold);
+        char key = (char)waitKey(1);
     }
 
     destroyAllWindows();
