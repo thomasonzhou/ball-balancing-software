@@ -3,4 +3,5 @@ build/
 mte380_python_software.egg-info/
 __pycache__/
 bin/*
-!bin/homing.py
+!bin/run_homing.py
+.venv

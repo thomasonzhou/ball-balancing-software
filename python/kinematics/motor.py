@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import numpy as np
 
 MOTOR_LEG_LENGTH = 5 # cm

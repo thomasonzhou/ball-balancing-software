@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # Refer to `plate_vectors.png` for the visual on the vectors used below
 
 import numpy as np
