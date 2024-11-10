@@ -35,7 +35,7 @@ def translate_N_to_motor_angles(N_norm: npt.NDArray) -> tuple[float, float, floa
     Returns: 
     Tuple[float, float, float]: Absolute angles (float) of motor A, B, C
     """
-    
+
     motors = [Motor(orientation) for orientation in MOTOR_ORIENTATIONS]
     phi_x, theta_y = calculate_theta_phi_from_N(N_norm)
     T = np.array([0, 0, get_plate_height()])
@@ -47,7 +47,10 @@ def translate_N_to_motor_angles(N_norm: npt.NDArray) -> tuple[float, float, floa
     return motor_angles
 
 if __name__ == "__main__":
-    angles = translate_dir_to_motor_angles(0, 0, 0)
-    print(angles)
+    angles_dir = translate_dir_to_motor_angles(0, 0, 0)
+    angles_N = translate_N_to_motor_angles(UNIT_K)
+
+    for angle_d, angle_N in zip(angles_dir, angles_N):
+        assert angle_d == angle_N
 
 
