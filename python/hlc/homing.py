@@ -1,8 +1,7 @@
-from subprocess import Popen
+#!/usr/bin/python3
 import os
 
 KINEMATICS_INFILE_NAME = "kinematics_input.txt"
-
 
 def read_last_line(filename):
     num_newlines = 0
@@ -18,15 +17,9 @@ def read_last_line(filename):
         last_line = f.readline().decode().strip()
     return last_line
 
-
-def level_platform():
-    detect_aruco = Popen("./aruco_detection")
-
-    calibrated = False
-    while not calibrated:
-        aruco_data = read_last_line(KINEMATICS_INFILE_NAME)
-        x, y, z, distance = aruco_data.split(",")
-
-
-if __name__ == "__main__":
-    # level_platform()
+def read_aruco_data():
+    aruco_data = read_last_line(KINEMATICS_INFILE_NAME)
+    aruco_data_list = aruco_data.split(",")
+    if not aruco_data_list:
+        return None
+    return aruco_data_list # x, y, z, distance
