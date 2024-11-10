@@ -7,8 +7,8 @@ using namespace std;
 using namespace cv;
 
 
-const int cannyThresholdInitialValue = 100;
-const int accumulatorThresholdInitialValue = 30;
+const int cannyThresholdInitialValue = 102;
+const int accumulatorThresholdInitialValue = 33;
 const int maxCannyThreshold = 400;
 const int maxAccumulatorThreshold = 200;
 const string windowName = "Hough transform";
@@ -19,6 +19,8 @@ void HoughDetection(const Mat& src_gray, Mat& src_display, int cannyThreshold, i
 {
     std::vector<Vec3f> circles;
     HoughCircles(src_gray, circles, HOUGH_GRADIENT, 1, src_gray.rows / 8, cannyThreshold, accumulatorThreshold, 0, 0);
+
+    //TODO: remove all circles that are too big/too small
 
     Mat display = src_display.clone();
     for (size_t i = 0; i < circles.size(); i++)
@@ -54,7 +56,8 @@ int main(int argc, char** argv)
     
     createTrackbar(cannyTrackbarName, windowName, &cannyThreshold, maxCannyThreshold);
     createTrackbar(accumulatorTrackbarName, windowName, &accumulatorThreshold, maxAccumulatorThreshold);
-
+    
+    int step = 0;
     while (true)
     {
         bool ret = cap.read(frame);
@@ -69,9 +72,12 @@ int main(int argc, char** argv)
 
         cannyThreshold = max(cannyThreshold, 1);
         accumulatorThreshold = max(accumulatorThreshold, 1);
-        cout << "Canny: " << cannyThreshold << " Accumulator: " << accumulatorThreshold << endl;
-
+        step += 1;
         HoughDetection(src_gray, frame, cannyThreshold, accumulatorThreshold);
+        if (step % 100 == 0){
+            cout << "Canny: " << cannyThreshold << " Accumulator: " << accumulatorThreshold << endl;
+
+        }
         char key = (char)waitKey(1);
     }
 

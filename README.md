@@ -33,3 +33,7 @@ The binary/binaries will be outputted as a file. To run a binary, type
 ```bash
 ./name_of_binary
 ```
+
+
+## Misc
+To find an appropriate FOV: [FOV Calculator](https://www.arducam.com/fov-calculator/)
