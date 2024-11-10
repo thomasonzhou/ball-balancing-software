@@ -4,6 +4,45 @@
 using namespace std;
 using namespace cv;
 
+cv::Mat rot2euler(const cv::Mat & rotationMatrix)
+{
+    cv::Mat euler(3,1,CV_64F);
+
+    double m00 = rotationMatrix.at<double>(0,0);
+    double m02 = rotationMatrix.at<double>(0,2);
+    double m10 = rotationMatrix.at<double>(1,0);
+    double m11 = rotationMatrix.at<double>(1,1);
+    double m12 = rotationMatrix.at<double>(1,2);
+    double m20 = rotationMatrix.at<double>(2,0);
+    double m22 = rotationMatrix.at<double>(2,2);
+
+    double bank, attitude, heading;
+
+    // Assuming the angles are in radians.
+    if (m10 > 0.998) { // singularity at north pole
+        bank = 0;
+        attitude = CV_PI/2;
+        heading = atan2(m02,m22);
+    }
+    else if (m10 < -0.998) { // singularity at south pole
+        bank = 0;
+        attitude = -CV_PI/2;
+        heading = atan2(m02,m22);
+    }
+    else
+    {
+        bank = atan2(-m12,m11);
+        attitude = asin(m10);
+        heading = atan2(-m20,m00);
+    }
+
+    euler.at<double>(0) = bank;
+    euler.at<double>(1) = attitude;
+    euler.at<double>(2) = heading;
+
+    return euler;
+}
+
 void detectMarker(){
     const int camId = 0;
     const bool showRejected = false;
@@ -34,6 +73,7 @@ void detectMarker(){
     waitTime = 10;
 
     double totalTime = 0;
+    int count = 0;
 
     //! [aruco_pose_estimation2]
     // set coordinate system
@@ -69,6 +109,7 @@ void detectMarker(){
         //! [aruco_pose_estimation3]
         double currentTime = ((double)getTickCount() - tick) / getTickFrequency();
         totalTime += currentTime;
+        count += 1;
      
         //! [aruco_draw_pose_estimation]
         // draw results
@@ -79,12 +120,32 @@ void detectMarker(){
             if(estimatePose) {
                 for(unsigned int i = 0; i < ids.size(); i++) {
                     cv::drawFrameAxes(imageCopy, camMatrix, distCoeffs, rvecs[i], tvecs[i], MARKER_LENGTH_METERS * 1.5f, 2);
-                    if (ids[i] == MARKER_NUMBER){
-                        cout<<"Detection Time: " << currentTime * 1000 <<"ms"
-                        << "\nMarker found: " << ids[i] 
-                        << "\nrvec: " << rvecs[i] 
-                        << "\ntvec: " << tvecs[i] << endl;
+                    if (ids[i] == MARKER_NUMBER && count % 50 == 0){
+                        cv::Mat rotation_mat;
+                        cv::Rodrigues(rvecs[i], rotation_mat);
+                        cv::Mat euler_vec = rot2euler(rotation_mat);
+                        
+                        const double target_x = -euler_vec.at<double>(0);
+                        const double target_y = euler_vec.at<double>(1);
+                        const double t_z = euler_vec.at<double>(2);
+                        const double angle = sqrt(target_x * target_x + target_y * target_y);
+
+                        cout << "x: " << target_x 
+                        << " y: " << target_y 
+                        <<"z: " << t_z
+                        << " angle: " << angle <<endl;
+
+
+
+                        // cout<<"Detection Time: " << currentTime * 1000 <<"ms"
+                        // << "\nMarker found: " << ids[i] 
+                        // << "\nrvec: " << rvecs[i] 
+                        // << "\nrotation: " << rotation_mat
+                        // << "\neuler: " <<euler_vec
+                        // << "\ntvec: " << tvecs[i] << endl;
                     }
+
+
                 }
             }
         }
