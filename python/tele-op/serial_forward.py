@@ -3,7 +3,7 @@ import time
 
 from parse_process import parse_coord, ascii_encode
 from pid.position_feedback import Controller
-from kinematics.kinematics import translate_dir_to_motor_angles
+from kinematics.wrappers import translate_dir_to_motor_angles
 
 pid = Controller()
 desired_coord = (0,0)
