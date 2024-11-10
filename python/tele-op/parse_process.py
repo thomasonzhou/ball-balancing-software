@@ -10,7 +10,7 @@ def parse_coord(data):
         y = float(match.group(2))
         return x, y
     else:
-        print("Data format error")
+        # print("Data format error")
         return None
     
 def ascii_encode(motor_angles):
