@@ -1,5 +1,7 @@
 #include "aruco_samples_utility.hpp"
 #include "camera_info.hpp"
+#include "interfacing.hpp"
+#include <fstream>
 
 using namespace std;
 using namespace cv;
@@ -165,23 +167,31 @@ double avg_non_nan(double n1, double n2)
     return (n1 + n2) / 2.0;
 }
 
-void compute_normal_vector(Euler& e)
+array<double, 3> compute_normal_vector(Euler& e)
 {
     double n1_x = sin(e.yaw) * cos(e.roll);
     double n1_y = sin(e.yaw) * sin(e.roll);
     double n1_z = cos(e.yaw);
-
-    cout << n1_x << ", " << n1_y << ", " << n1_z <<endl;
+    // cout << n1_x << ", " << n1_y << ", " << n1_z <<endl;
 
     double n2_x = sin(e.yaw) * cos(e.pitch);
     double n2_y = sin(e.yaw) * sin(e.pitch);
     double n2_z = cos(e.yaw);
-    cout << n2_x << ", " << n2_y << ", " << n2_z <<endl;
+    // cout << n2_x << ", " << n2_y << ", " << n2_z <<endl;
 
     double n_x = avg_non_nan(n1_x, n2_x);
     double n_y = avg_non_nan(n1_y, n2_y);
     double n_z = avg_non_nan(n1_z, n2_z);
-    cout << n_x << ", " << n_y << ", " << n_z <<endl;    
+    // cout << n_x << ", " << n_y << ", " << n_z <<endl;   
+
+    return array<double, 3> {n_x, n_y, n_z}; 
+}
+
+void write_to_kinematics_infile(string line)
+{
+    ofstream outfile;
+    outfile.open(KINEMATICS_INFILE_NAME, std::ios_base::app);
+    outfile << line <<endl;
 }
 
 
@@ -209,19 +219,16 @@ void detectMarker(){
     VideoCapture inputVideo;
     int waitTime;
     inputVideo.open(camId);
-    waitTime = 10;
 
     double totalTime = 0;
     int count = 0;
 
-    //! [aruco_pose_estimation2]
     // set coordinate system
     Mat objPoints(4, 1, CV_32FC3);
     objPoints.ptr<Vec3f>(0)[0] = Vec3f(-MARKER_LENGTH_METERS/2.f, MARKER_LENGTH_METERS/2.f, 0);
     objPoints.ptr<Vec3f>(0)[1] = Vec3f(MARKER_LENGTH_METERS/2.f, MARKER_LENGTH_METERS/2.f, 0);
     objPoints.ptr<Vec3f>(0)[2] = Vec3f(MARKER_LENGTH_METERS/2.f, -MARKER_LENGTH_METERS/2.f, 0);
     objPoints.ptr<Vec3f>(0)[3] = Vec3f(-MARKER_LENGTH_METERS/2.f, -MARKER_LENGTH_METERS/2.f, 0);
-    //! [aruco_pose_estimation2]
 
     while(inputVideo.grab()) {
         Mat image, imageCopy;
@@ -229,7 +236,6 @@ void detectMarker(){
 
         double tick = (double)getTickCount();
 
-        //! [aruco_pose_estimation3]
         vector<int> ids;
         vector<vector<Point2f> > corners, rejected;
 
@@ -245,12 +251,10 @@ void detectMarker(){
                 solvePnP(objPoints, corners.at(i), camMatrix, distCoeffs, rvecs.at(i), tvecs.at(i));
             }
         }
-        //! [aruco_pose_estimation3]
         double currentTime = ((double)getTickCount() - tick) / getTickFrequency();
         totalTime += currentTime;
         count += 1;
      
-        //! [aruco_draw_pose_estimation]
         // draw results
         image.copyTo(imageCopy);
         if(!ids.empty()) {
@@ -262,45 +266,31 @@ void detectMarker(){
                     if (ids[i] == MARKER_NUMBER && count % 10 == 0){
                         Mat rotation_mat;
                         Rodrigues(rvecs[i], rotation_mat);
-                        // Mat euler_vec = rot2euler(rotation_mat);
                         
-                        const double target_x = tvecs[i][0];
-                        const double target_y = tvecs[i][1];
                         const double target_z = tvecs[i][2];
-                        const double angle = sqrt(target_x * target_x + target_y * target_y);
 
                         Quaternion quat = rot2quat(rotation_mat);
                         Euler euler_angles = quat2euler(quat);
 
-                        const double deg_per_rad = 57.2958;
-                        cout << "x: " << target_x 
-                        << " y: " << target_y 
-                        <<"z: " << target_z
-                        << " angle: " << angle <<endl;
+                        array<double, 3> normal_vector = compute_normal_vector(euler_angles);
 
-                        cout<<"Detection Time: " << currentTime * 1000 <<"ms"
-                        // << "\nMarker found: " << ids[i] 
-                        << "\nrvec: " << rvecs[i] 
-                        << "\nquat: " << quat
-                        << "\neuler: " << euler_angles.roll * deg_per_rad << ", " << euler_angles.yaw * deg_per_rad << ", " << euler_angles.pitch * deg_per_rad <<endl;
-                        // << "\ntvec: " << tvecs[i] << endl;
-                        compute_normal_vector(euler_angles);
+                        cout<<"x: " << normal_vector[0] << " y: " << normal_vector[1] << "z: " << normal_vector[2] << " Time: " << currentTime * 1000 <<"ms" <<endl;
+
+                        const string out = to_string(normal_vector[0]) + "," + to_string(normal_vector[1]) + "," + to_string(normal_vector[2]) + "," + to_string(target_z);
+                        write_to_kinematics_infile(out);
                     }
 
 
                 }
             }
         }
-        //! [aruco_draw_pose_estimation]
 
         if(showRejected && !rejected.empty())
             aruco::drawDetectedMarkers(imageCopy, rejected, noArray(), Scalar(100, 0, 255));
 
         imshow("out", imageCopy);
-        char key = (char)waitKey(waitTime);
-        if(key == 27) break;
+        char key = (char)waitKey(10);
     }
-    //! [aruco_detect_markers]
 }
 
 int main(){
