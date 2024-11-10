@@ -12,7 +12,7 @@ double xValue = 0;
 double yValue = 0; 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 double get_value(int pin){
@@ -24,9 +24,12 @@ void loop() {
   xValue = get_value(VRX_PIN);
   yValue = get_value(VRY_PIN);
 
-  Serial.print("x = ");
-  Serial.print(xValue, 5);
-  Serial.print(", y = ");
-  Serial.println(yValue, 5);
+  Serial.print("<a");
+  for (int i = 0; i < 3; i++){
+    Serial.print(",");
+    Serial.print(xValue);
+  }
+  Serial.println(">");
+
   delay(200);
 }
