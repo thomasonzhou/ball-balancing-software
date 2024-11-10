@@ -146,3 +146,4 @@ def test_calculate_abs_motor_angle_from_li():
         angle = calculate_abs_motor_angle_from_li(value["known_li"])
         angle = np.round(angle, ROUND_DECIMALS)
         assert value["known_abs_angle"] == angle
+        
