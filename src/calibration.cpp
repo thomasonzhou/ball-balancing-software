@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
 
     //! [CalibrationWithCharucoBoard1]
     // Create charuco board object and CharucoDetector
-    aruco::CharucoBoard board(Size(squaresX, squaresY), MARKER_LENGTH_METERS, MARKER_LENGTH_METERS, dictionary);
+    aruco::CharucoBoard board(Size(squaresX, squaresY), CHARUCO_SQUARE_PIXELS, CHARUCO_MARKER_PIXELS, dictionary);
     aruco::CharucoDetector detector(board, charucoParams, detectorParams);
 
     // Collect data from each frame
