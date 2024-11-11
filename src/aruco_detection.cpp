@@ -267,7 +267,7 @@ void detectMarker(){
                         Mat rotation_mat;
                         Rodrigues(rvecs[i], rotation_mat);
                         
-                        const double target_z = tvecs[i][2];
+                        const double target_z = tvecs[i][2] - CAMERA_TO_SHAFT_HEIGHT;
 
                         Quaternion quat = rot2quat(rotation_mat);
                         Euler euler_angles = quat2euler(quat);
