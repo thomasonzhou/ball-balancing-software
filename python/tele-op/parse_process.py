@@ -12,5 +12,3 @@ def parse_coord(data):
     else:
         print("Data format error")
         return None
-
-
