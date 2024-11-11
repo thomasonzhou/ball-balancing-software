@@ -2,6 +2,10 @@
 
 from kinematics.plate_kinematics import *
 
+def get_plate_height():
+    # File I/O based on Thomason's CV binary
+    return DEFAULT_PLATE_HEIGHT
+
 def translate_dir_to_motor_angles(x_dir: float, y_dir: float, mag: float) -> tuple[float, float, float]:
     """Wrapper function for movement kinematics: Translate x-y coordiantes to a vector, then return motor angles
     that tilt the plane in that direction, about a specified magnitude
@@ -17,11 +21,11 @@ def translate_dir_to_motor_angles(x_dir: float, y_dir: float, mag: float) -> tup
     
     dir = np.array([x_dir, y_dir])
     N = calculate_normal_from_dir_vec(dir, mag)
-    motor_angles = translate_N_to_motor_angles(N, DEFAULT_PLATE_HEIGHT)
+    motor_angles = translate_N_to_motor_angles(N)
     return motor_angles
     
 
-def translate_N_to_motor_angles(N_norm: npt.NDArray, distance: float) -> tuple[float, float, float]:
+def translate_N_to_motor_angles(N_norm: npt.NDArray) -> tuple[float, float, float]:
     """Wrapper function for homing: Translate a normal vector and distance, and return motor angles that give the plane 
     it's current tilt
     
@@ -31,9 +35,10 @@ def translate_N_to_motor_angles(N_norm: npt.NDArray, distance: float) -> tuple[f
     Returns: 
     Tuple[float, float, float]: Absolute angles (float) of motor A, B, C
     """
+
     motors = [Motor(orientation) for orientation in MOTOR_ORIENTATIONS]
     phi_x, theta_y = calculate_theta_phi_from_N(N_norm)
-    T = np.array([0, 0, distance])
+    T = np.array([0, 0, get_plate_height()])
     for motor in motors:
         li = calculate_li(T, theta_y, phi_x, pi_plat=motor.PLATE_ORIENTATION_VECTOR, bi = motor.MOTOR_ORIENTATION_VECTOR)
         abs_angle = calculate_abs_motor_angle_from_li(li)
