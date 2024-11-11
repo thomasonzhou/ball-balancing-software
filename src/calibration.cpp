@@ -75,12 +75,10 @@ int main(int argc, char *argv[]) {
         charucoParams.tryRefineMarkers = true;
     }
 
-    //! [CalibrationWithCharucoBoard1]
     // Create charuco board object and CharucoDetector
-    aruco::CharucoBoard board(Size(squaresX, squaresY), CHARUCO_SQUARE_PIXELS, CHARUCO_MARKER_PIXELS, dictionary);
+    aruco::CharucoBoard board(Size(squaresX, squaresY), CHARUCO_SQUARE_PIXELS, CHARUCO_MARKER_PIXELS,dictionary);
     aruco::CharucoDetector detector(board, charucoParams, detectorParams);
 
-    // Collect data from each frame
     vector<Mat> allCharucoCorners, allCharucoIds;
 
     vector<vector<Point2f>> allImagePoints;
@@ -121,10 +119,6 @@ int main(int argc, char *argv[]) {
 
         // Wait for key pressed
         char key = (char)waitKey(waitTime);
-
-        if(key == 27) {
-            break;
-        }
 
         //! [CalibrationWithCharucoBoard2]
         if(key == 'c' && currentCharucoCorners.total() > 3) {
@@ -189,10 +183,6 @@ int main(int argc, char *argv[]) {
 
             imshow("out", imageCopy);
             char key = (char)waitKey(0);
-            if(key == 27) {
-                break;
-            }
         }
     }
-    return 0;
 }
