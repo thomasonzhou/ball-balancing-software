@@ -22,11 +22,12 @@ def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArr
     Uses the Rodrigues rotation formula: https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
     
     Args:
-        dir_vec (2 float): Direction vector describing the tilt, on the x-y plane
+        dir_vec (2 float vector): Direction vector describing the tilt, on the x-y plane 
+            (can be either normalized or not)
         mag: How much to tilt the plate, in radians
     
     Returns:
-        3 float vector: The normal to the plate
+        3 float vector: The normal to the plate (normalized)
     """
     
     # Add this, else, normalizing with a norm of 0 will give NaNs everywhere + redundant code if no movement
@@ -37,9 +38,11 @@ def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArr
 
     # First, determine the axis of rotation. This is orthogonal to the dir_vec, in the x-y plane.
     # Recall that two vectors are orthogonal if their dot product is zero.
-
     rot_axis = np.array([-dir_vec[1], dir_vec[0], 0])
     rot_axis_norm = rot_axis / np.linalg.norm(rot_axis)
+
+    # Extending the direction vector to 3D from 2D
+    dir_vec = np.array([dir_vec[0], dir_vec[1], 0])
 
     # Rotate the direction vector about the orthogonal axis, with an angle of `mag` degrees
     dir_vec_rot = ( # Rodrigues rotation formula
@@ -84,6 +87,7 @@ def calculate_angle_from_cosine(a: float, b: float, c: float) -> float:
     Args:
         a (float): Opposite side of return angle
         b, c (floats): Other sides of triangle
+    
     Returns:
         float: Theta of A (rad)
     """
@@ -98,8 +102,8 @@ def calculate_theta_phi_from_N(N: npt.NDArray) -> tuple[float, float]:
         N (3 float vector): The normal vector with the desired plate tilt
     
     Returns:
-        float: phi_x -> tilk about the x axis
-        float: theta_y -> tilt about the y axis
+        float: phi_x -> tilt about the x axis (rad)
+        float: theta_y -> tilt about the y axis (rad)
     """
     N_norm = N/np.linalg.norm(N)
     phi_x = np.arcsin(-N_norm[1])
