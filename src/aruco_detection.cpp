@@ -252,7 +252,7 @@ void detectMarker() {
         for (unsigned int i = 0; i < ids.size(); i++) {
           drawFrameAxes(imageCopy, camMatrix, distCoeffs, rvecs[i], tvecs[i],
                         MARKER_LENGTH_METERS * 1.5f, 2);
-          if (ids[i] == MARKER_NUMBER && count % 10 == 0) {
+          if (ids[i] == MARKER_NUMBER) {
             Mat rotation_mat;
             Rodrigues(rvecs[i], rotation_mat);
 
@@ -268,8 +268,8 @@ void detectMarker() {
                 compute_normal_vector(euler_angles);
 
             cout << "x: " << normal_vector[0] << " y: " << normal_vector[1]
-                 << "z: " << normal_vector[2] << " Time: " << currentTime * 1000
-                 << "ms" << endl;
+                 << " z: " << normal_vector[2] << " dist: " << target_z
+                 << " Time: " << currentTime * 1000 << " ms" << endl;
 
             const string out = to_string(normal_vector[0]) + "," +
                                to_string(normal_vector[1]) + "," +
