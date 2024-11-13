@@ -1,15 +1,16 @@
 import math
 
 def saturate(control: float, sat_min: float, sat_max: float) -> float:
-"""Helper function to keep the PID controller between the limits
+    """Helper function to keep the PID controller between the limits
 
-Args:
-     control (float): Control angle (deg)
-     sat_min (float): Minimum angle (deg)
-     sat_max (float): Maximum angle (deg)
+    Args:
+        control (float): Control angle (deg)
+        sat_min (float): Minimum angle (deg)
+        sat_max (float): Maximum angle (deg)
      
-Returns:
-     float: Control angle within the saturation limits (deg)
+    Returns:
+        float: Control angle within the saturation limits (deg)
+    """
     return max(min(sat_max, control), sat_min)
 
 class Controller:
@@ -27,8 +28,8 @@ class Controller:
         self.int_x = 0
         self.int_y = 0
 
-    def calculate(self, desired_pos: tuple[float, float], actual_pos: tuple[float, float] -> tuple[float, float, float]:
-        """Main PID function"""
+    def calculate(self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]) -> tuple[float, float, float]:
+        """Main PID function
         
         Args:
             desired_pos (tuple of two floats): desired x and y position of the ball
@@ -39,6 +40,7 @@ class Controller:
                   dir_x: x-component of the unit direction vector to tilt the plate
                   dir_y: y-component of the unit direction vector to tilt the plate
                   sat_theta_mag: angle to tilt the plate (rad)
+        """
         x_r, y_r = desired_pos
         x, y = actual_pos
 
