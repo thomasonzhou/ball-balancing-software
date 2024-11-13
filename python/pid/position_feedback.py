@@ -26,7 +26,18 @@ class Controller:
         self.int_x = 0
         self.int_y = 0
 
-    def calculate(self, desired_pos, actual_pos):
+    def calculate(self, desired_pos: tuple[float, float], actual_pos: tuple[float, float] -> tuple[float, float, float]:
+        """Main PID function"""
+        
+        Args:
+            desired_pos (tuple of two floats): desired x and y position of the ball
+            actual_pos (tuple of two floats): current x and y position of the ball
+            
+        Returns:
+             tuple of three floats: [dir_x, dir_y, sat_theta_mag]
+                  dir_x: x-component of the unit direction vector to tilt the plate
+                  dir_y: y-component of the unit direction vector to tilt the plate
+                  sat_theta_mag: angle to tilt the plate (rad)
         x_r, y_r = desired_pos
         x, y = actual_pos
 
