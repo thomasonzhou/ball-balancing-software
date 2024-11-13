@@ -7,7 +7,8 @@ import numpy as np
 # Module imports
 from hlc.homing import read_aruco_data
 from kinematics.wrappers import translate_N_to_motor_angles
-from serial_utils import init_serial, teardown_serial, tare_motors, wait_for_joystick_start, serial_forward
+from serial_utils import *
+from pid.position_feedback import Controller
 
 
 def get_motor_angles_from_aruco() -> tuple[float, float, float] | tuple[None, None, None]:
@@ -39,6 +40,8 @@ def get_motor_angles_from_aruco() -> tuple[float, float, float] | tuple[None, No
 
 if __name__ == "__main__":
     # Setup
+    desired_coord = (0,0,0)
+    pid = Controller()
     motor_serial, joystick_serial = init_serial()
 
     # Give time to the user to setup
@@ -55,18 +58,25 @@ if __name__ == "__main__":
 
     # Waiting for start from user
     print("Waiting for the joystick start")
-    wait_for_joystick_start()
+    wait_for_user(joystick_serial)
 
     # Tele-op until keyboard cancellation
     print("Starting tele-op")
     try:
         while True:
-            serial_forward()
+            actual_coord = joystick_decode(joystick_serial)
+            dir_x, dir_y, theta_mag = pid.calculate(desired_coord, actual_coord)
+            motor_angles = translate_dir_to_motor_angles(dir_x, dir_y, theta_mag)
+            send_encoded_motor_commands(motor_angles)
+            
+            print(f"PID VECTOR: {(dir_x, dir_y, theta_mag)}")
+            print(f"TX ANGLE: {motor_angles}")    
+            
+            time.sleep(0.01)
+            
     except KeyboardInterrupt:
-        print("Key pressed! Stopping.")
-        pass
+        print("User Interrupt")
 
-    print("Tearing down serial")
-    teardown_serial()
+    close_serial(motor_serial, joystick_serial)
 
 
