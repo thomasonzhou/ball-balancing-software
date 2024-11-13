@@ -1,6 +1,15 @@
 import math
 
-def saturate(control, sat_min, sat_max):
+def saturate(control: float, sat_min: float, sat_max: float) -> float:
+"""Helper function to keep the PID controller between the limits
+
+Args:
+     control (float): Control angle (deg)
+     sat_min (float): Minimum angle (deg)
+     sat_max (float): Maximum angle (deg)
+     
+Returns:
+     float: Control angle within the saturation limits (deg)
     return max(min(sat_max, control), sat_min)
 
 class Controller:
