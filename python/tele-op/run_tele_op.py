@@ -40,7 +40,7 @@ def get_motor_angles_from_aruco() -> tuple[float, float, float] | tuple[None, No
 
 if __name__ == "__main__":
     # Setup
-    desired_coord = (0,0,0)
+    desired_coord = (0,0)
     pid = Controller()
     motor_serial, joystick_serial = init_serial()
 
