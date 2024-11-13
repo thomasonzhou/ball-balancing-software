@@ -8,7 +8,8 @@ description = "MTE380 Python Software"
 version = "0.0.1"
 dependencies = [
   "numpy",
-  "pytest"
+  "pytest",
+  "pyserial"
 ]
 requires-python = ">= 3.10"
 authors = [
@@ -16,4 +17,4 @@ authors = [
 ]
 
 [tool.setuptools]
-packages = ["kinematics"]
+packages = ["kinematics", "tele-op", "pid"]
