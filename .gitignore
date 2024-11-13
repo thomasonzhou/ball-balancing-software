@@ -1,2 +1,7 @@
+.vscode
+build/
 mte380_python_software.egg-info/
 __pycache__/
+bin/*
+!bin/run_homing.py
+.venv

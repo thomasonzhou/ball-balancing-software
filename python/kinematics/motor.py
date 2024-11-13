@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import numpy as np
 
 MOTOR_LEG_LENGTH = 5 # cm
@@ -24,3 +25,6 @@ class Motor:
 
     def set_desired_angle(self, angle: float):
         self.desired_angle = angle
+    
+    def get_set_angle(self):
+        return self.desired_angle
