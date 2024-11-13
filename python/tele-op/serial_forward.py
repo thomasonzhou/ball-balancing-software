@@ -16,7 +16,7 @@ if computeOS == 'Linux':
     output_com_port = '/dev/ttyUSB0'
 elif computeOS == 'Windows':
     input_com_port = 'COM8'
-    output_com_port = 'COM5'
+    output_com_port = 'COM7'
 
 baudrate = 115200
 
