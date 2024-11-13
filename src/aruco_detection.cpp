@@ -162,9 +162,9 @@ array<double, 3> compute_normal_vector(Euler& e) {
   // double n_y = avg_non_nan(n1_y, n2_y);
   // double n_z = avg_non_nan(n1_z, n2_z);
   // cout << n_x << ", " << n_y << ", " << n_z <<endl;
-  double n_x = sin(e.yaw) / sqrt(3.0);
-  double n_y = -sin(e.roll) / sqrt(3.0);
-  double n_z = cos(e.roll) * cos(e.yaw) / sqrt(3.0);
+  double n_x = sin(e.yaw);
+  double n_y = -sin(e.roll);
+  double n_z = cos(e.roll) * cos(e.yaw);
 
   return array<double, 3>{n_x, n_y, n_z};
 }
@@ -260,10 +260,10 @@ void detectMarker() {
 
             Quaternion quat = rot2quat(rotation_mat);
             Euler euler_angles = quat2euler(quat);
-            // const double factor = 180.0 / M_PI;
-            // cout << euler_angles.roll * factor << " "
-            //      << euler_angles.yaw * factor << " "
-            //      << euler_angles.pitch * factor << endl;
+            const double factor = 180.0 / M_PI;
+            cout << euler_angles.roll * factor << " "
+                 << euler_angles.yaw * factor << " "
+                 << euler_angles.pitch * factor << endl;
             array<double, 3> normal_vector =
                 compute_normal_vector(euler_angles);
 
