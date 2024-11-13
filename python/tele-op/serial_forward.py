@@ -1,5 +1,6 @@
 import serial
 import time
+import platform
 
 from parse_process import parse_coord, ascii_encode
 from pid.position_feedback import Controller
@@ -9,8 +10,14 @@ pid = Controller()
 desired_coord = (0,0)
 dir_x, dir_y, theta_mag = 0,0,0
 
-input_com_port = 'COM8'
-output_com_port = 'COM5'
+computeOS = platform.system()
+if computeOS == 'Linux':
+    input_com_port = '/dev/ttyACM0'
+    output_com_port = '/dev/ttyUSB0'
+elif computeOS == 'Windows':
+    input_com_port = 'COM8'
+    output_com_port = 'COM5'
+
 baudrate = 115200
 
 try:
