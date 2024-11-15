@@ -7,6 +7,7 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBCAMERA REQUIRED libcamera)
 
 include_directories( 
+    include
     ${LIBCAMERA_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
 )
