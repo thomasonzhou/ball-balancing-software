@@ -7,15 +7,15 @@ add_executable(calibration src/calibration_rpi.cpp)
 add_executable(marker_generation src/marker_generation.cpp)
 add_executable(ball_detection src/ball_detection.cpp)
 
-set(OpenCV_DIR "/Users/thomasonzhou/repos/build_opencv") # example dir, your installation path may be different
 find_package(PkgConfig REQUIRED)
+find_package(OpenCV REQUIRED)
 pkg_check_modules(LIBCAMERA REQUIRED libcamera)
 
 find_package(OpenCV)
 include_directories( 
     include
+    ${LIBCAMERA_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
-   "/Users/thomasonzhou/repos/opencv-4.10.0" 
     )
 
 target_link_libraries( aruco_detection -llccv ${OpenCV_LIBS} )
