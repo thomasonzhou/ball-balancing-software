@@ -2,13 +2,11 @@ cmake_minimum_required(VERSION 3.12)
 project(mte-380-software)
 set(CMAKE_CXX_STANDARD 17)
 
-
-find_package(PkgConfig REQUIRED)
 find_package(OpenCV REQUIRED)
+find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBCAMERA REQUIRED libcamera)
 
 include_directories( 
-    include
     ${LIBCAMERA_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
 )
