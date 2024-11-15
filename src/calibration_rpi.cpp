@@ -69,6 +69,7 @@ int main(int argc, char* argv[]) {
   cam.options->video_height=768;
   cam.options->framerate=5;
   cam.options->verbose=true;
+  cv::namedWindow("Video",cv::WINDOW_NORMAL);
   cam.startVideo();
 
   int ch=0;
@@ -93,7 +94,11 @@ int main(int argc, char* argv[]) {
   vector<Mat> allImages;
   Size imageSize;
 
-  while (cam.getVideoFrame(image,1000) and allImagePoints.size() < 50) {
+  while (allImagePoints.size() < 50) {
+    if(!cam.getVideoFrame(image,1000)){
+        std::cout<<"Timeout error"<<std::endl;
+        continue;
+    }
     Mat imageCopy;
 
     vector<int> markerIds;
@@ -104,7 +109,6 @@ int main(int argc, char* argv[]) {
 
     // Detect ChArUco board
     detector.detectBoard(image, currentCharucoCorners, currentCharucoIds);
-    //! [CalibrationWithCharucoBoard1]
 
     // Draw results
     image.copyTo(imageCopy);
@@ -113,8 +117,7 @@ int main(int argc, char* argv[]) {
     }
 
     if (currentCharucoCorners.total() > 3) {
-      aruco::drawDetectedCornersCharuco(imageCopy, currentCharucoCorners,
-                                        currentCharucoIds);
+      aruco::drawDetectedCornersCharuco(imageCopy, currentCharucoCorners, currentCharucoIds);
     }
 
     std::string message =
@@ -123,7 +126,7 @@ int main(int argc, char* argv[]) {
     putText(imageCopy, message, Point(10, 20), FONT_HERSHEY_SIMPLEX, 0.5,
             Scalar(255, 0, 0), 2);
 
-    imshow("out", imageCopy);
+    imshow("Video", imageCopy);
 
     // Wait for key pressed
     char key = (char)waitKey(waitTime);
@@ -195,7 +198,7 @@ int main(int argc, char* argv[]) {
                                           allCharucoIds[frame]);
       }
 
-      imshow("out", imageCopy);
+      imshow("Video", imageCopy);
       char key = (char)waitKey(0);
     }
   }
