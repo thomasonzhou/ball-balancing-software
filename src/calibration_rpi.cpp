@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 
   int ch=0;
 
-  int waitTime;
+  int waitTime=10;
 
   aruco::CharucoParameters charucoParams;
   if (refindStrategy) {
@@ -170,11 +170,9 @@ int main(int argc, char* argv[]) {
     cameraMatrix.at<double>(0, 0) = aspectRatio;
   }
 
-  // Calibrate camera using ChArUco
   double repError = calibrateCamera(
       allObjectPoints, allImagePoints, imageSize, cameraMatrix, distCoeffs,
       noArray(), noArray(), noArray(), noArray(), noArray(), calibrationFlags);
-  //! [CalibrationWithCharucoBoard3]
 
   bool saveOk =
       saveCameraParams(outputFile, imageSize, aspectRatio, calibrationFlags,
@@ -188,18 +186,4 @@ int main(int argc, char* argv[]) {
   cout << "Rep Error: " << repError << endl;
   cout << "Calibration saved to " << outputFile << endl;
 
-  // Show interpolated charuco corners for debugging
-  if (showChessboardCorners) {
-    for (size_t frame = 0; frame < allImages.size(); frame++) {
-      Mat imageCopy = allImages[frame].clone();
-
-      if (allCharucoCorners[frame].total() > 0) {
-        aruco::drawDetectedCornersCharuco(imageCopy, allCharucoCorners[frame],
-                                          allCharucoIds[frame]);
-      }
-
-      imshow("Video", imageCopy);
-      char key = (char)waitKey(0);
-    }
-  }
 }
