@@ -65,8 +65,8 @@ int main(int argc, char* argv[]) {
   //set up rpi camera
   cv::Mat image;
   lccv::PiCamera cam;
-  cam.options->video_width=1024;
-  cam.options->video_height=768;
+  cam.options->video_width=1920;
+  cam.options->video_height=1080;
   cam.options->framerate=30;
   cam.options->verbose=true;
   cv::namedWindow("Video",cv::WINDOW_NORMAL);
