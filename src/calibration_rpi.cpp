@@ -62,6 +62,7 @@ int main(int argc, char* argv[]) {
     return 0;
   }
 
+  //set up rpi camera
   cv::Mat image;
   lccv::PiCamera cam;
   cam.options->video_width=1024;

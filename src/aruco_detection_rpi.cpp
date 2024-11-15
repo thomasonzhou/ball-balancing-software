@@ -199,14 +199,15 @@ void detectMarker() {
     }
   }
   aruco::ArucoDetector detector(dictionary, detectorParams);
+  
+  Mat image;
   lccv::PiCamera cam;
   cam.options->video_width=1024;
   cam.options->video_height=768;
-  cam.options->framerate=5;
+  cam.options->framerate=30;
   cam.options->verbose=true;
   cv::namedWindow("Video",cv::WINDOW_NORMAL);
   cam.startVideo();
-
 
   int waitTime;
 
@@ -223,10 +224,9 @@ void detectMarker() {
       Vec3f(MARKER_LENGTH_METERS / 2.f, -MARKER_LENGTH_METERS / 2.f, 0);
   objPoints.ptr<Vec3f>(0)[3] =
       Vec3f(-MARKER_LENGTH_METERS / 2.f, -MARKER_LENGTH_METERS / 2.f, 0);
-
-  while (inputVideo.grab()) {
-    Mat image, imageCopy;
-    inputVideo.retrieve(image);
+  
+  while (cam.getVideoFrame(image,1000)) {
+    Mat imageCopy;
 
     double tick = (double)getTickCount();
 
