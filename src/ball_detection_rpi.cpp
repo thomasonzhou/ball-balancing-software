@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     cam.options->framerate=30;
     cam.startVideo();
     
-    if (!cam->camerastarted)
+    if (!cam.camerastarted)
     {
         cerr << "Error: Could not open the arducam.\n";
         return -1;
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
     int step = 0;
     while (true)
     {
-        bool ret = cap.getVideoFrame(frame, cameraTimeout);
+        bool ret = cam.getVideoFrame(frame, cameraTimeout);
         if (!ret)
         {
             cerr << "Error: Couldn't capture video frame.\n";
