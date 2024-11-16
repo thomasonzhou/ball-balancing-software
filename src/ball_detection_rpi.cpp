@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     VideoCapture cap;
     lccv::PiCamera cam;
     cam.options->video_width=2312;
-    cam.options->video_height=2312;
+    cam.options->video_height=1736;
     cam.options->framerate=30;
     cam.startVideo();
 
