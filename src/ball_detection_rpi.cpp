@@ -50,12 +50,6 @@ int main(int argc, char** argv)
     cam.options->video_height=2312;
     cam.options->framerate=30;
     cam.startVideo();
-    
-    if (!cam.camerastarted)
-    {
-        cerr << "Error: Could not open the arducam.\n";
-        return -1;
-    }
 
     namedWindow(windowName, WINDOW_AUTOSIZE);
     int cannyThreshold = cannyThresholdInitialValue;
