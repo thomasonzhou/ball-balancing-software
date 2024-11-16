@@ -12,14 +12,16 @@ include_directories(
     ${OpenCV_INCLUDE_DIRS}
 )
 
-add_executable(aruco_detection src/aruco_detection_rpi.cpp)
-add_executable(calibration src/calibration_rpi.cpp)
-add_executable(marker_generation src/marker_generation.cpp)
+# add_executable(aruco_detection src/aruco_detection.cpp)
+# add_executable(calibration src/calibration.cpp)
+# add_executable(marker_generation src/marker_generation.cpp)
 add_executable(ball_detection src/ball_detection.cpp)
+add_executable(ball_detection_rpi src/ball_detection_rpi.cpp)
 
-target_link_libraries( aruco_detection -llccv ${OpenCV_LIBS} )
-target_link_libraries( calibration -llccv ${OpenCV_LIBS} )
-target_link_libraries( marker_generation ${OpenCV_LIBS} )
+# target_link_libraries( aruco_detection ${OpenCV_LIBS} )
+# target_link_libraries( calibration ${OpenCV_LIBS} )
+# target_link_libraries( marker_generation ${OpenCV_LIBS} )
 target_link_libraries( ball_detection ${OpenCV_LIBS} )
+target_link_libraries( ball_detection_rpi -llccv ${OpenCV_LIBS} )
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
