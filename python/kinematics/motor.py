@@ -1,9 +1,5 @@
 import numpy as np
-
-MOTOR_LEG_LENGTH = 5 # cm
-PLATE_LEG_LENGTH = 8 # cm
-MOTOR_DIST_FROM_ORIGIN = 11 # cm
-PLATE_DIST_FROM_ORIGIN = 15 # cm
+from constants import MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH, MOTOR_DIST_FROM_ORIGIN, PLATE_DIST_FROM_ORIGIN
 
 class Motor:
     """Class defining a motor's orientation and leg details"""
