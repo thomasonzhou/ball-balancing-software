@@ -2,19 +2,15 @@
 
 import numpy as np
 import numpy.typing as npt
-from kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
+from kinematics.motor import Motor
+from kinematics.constants import (
+    MOTOR_LEG_LENGTH,
+    PLATE_LEG_LENGTH,
+    DEFAULT_PLATE_HEIGHT,
+    MOTOR_ORIENTATIONS,
+    UNIT_K
+)
 
-DEFAULT_PLATE_HEIGHT = 8 # cm, rel to shaft
-
-# See `motor_orientations.png`
-MOTOR_ORIENTATIONS = [
-    np.pi/2, # Motor A: along the y-axis
-    7*np.pi/6, # Motor B: 120 deg, CCW from A
-    11*np.pi/6, # Motor C: 120, CW from A
-]
-
-# HELPER CONSTANTS
-UNIT_K = np.array([0, 0, 1])
 
 def calculate_normal_from_dir_vec(dir_vec: npt.NDArray, mag: float) -> npt.NDArray:
     """Helper function to calculate the normal vector of the place given a direction and magnitude

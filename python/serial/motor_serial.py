@@ -12,7 +12,7 @@ class MotorSerial:
         Args:
             baudrate (int): Serial baudrate
         """
-        self.baudrate = baurdate
+        self.baudrate = baudrate
         computeOS = platform.system()
         if computeOS == 'Linux':
             output_com_port = '/dev/ttyUSB0'
@@ -28,7 +28,7 @@ class MotorSerial:
             print(f"Serial Initialized")
             self.motor_serial = motor_serial
 
-    def send_encoded_motor_commands(motor_command: str, motor_angles: tuple[float, float, float]):
+    def send_encoded_motor_commands(self, motor_command: str, motor_angles: tuple[float, float, float]):
         """ASCII encodes a given motor command and set of motor angles in the expected format
         
         Args:
@@ -40,8 +40,8 @@ class MotorSerial:
 
         self.motor_serial.write(motor_output)
 
-    def tare_motors(zero_angles: tuple[float, float, float]) -> bool:
-        """Helper function to send the tare command and waits for confirmation
+    def tare_motors(self, zero_angles: tuple[float, float, float]) -> bool:
+        """Send the tare command and waits for confirmation
         
         Args: 
             zero_angles (tuple of 3 floats, (motorA, motorB, motorC)): Angles of the motors' current position (rad)
@@ -72,8 +72,8 @@ class MotorSerial:
         print("Timeout Error: 'TARE' Not Confirmed")
         return False
     
-    def close_serial(motor_serial):
-        """Helper function to close the serial communications"""
+    def close(self, motor_serial):
+        """Close the serial communications"""
         motor_serial.close()
         print("Ports Closed")
     

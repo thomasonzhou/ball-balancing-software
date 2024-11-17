@@ -1,35 +1,35 @@
+# Python imports
+import numpy as np
+import time
+
+# Module imports
+from ball_position import get_ball_position
+from kinematics.constants import REST_MOTOR_ANGLE
+from kinematics.wrappers import translate_dir_to_motor_angles
+from pid.position_feedback import Controller
+from serial.motor_serial import MotorSerial
 
 
 def main():
     # Setup
-    desired_coord = (0,0)
+    desired_coord = np.array([0,0])
     pid = Controller()
-    motor_serial, joystick_serial = init_serial()
-
-    # Give time to the user to setup
-    input("Press enter when ready to start hte homing sequence: ")
+    motor_serial = MotorSerial()
 
     # Homing
     print("Starting homing sequence")
-    motor_angles = get_motor_angles_from_aruco()
-    if None in motor_angles:
-        raise ValueError("CV/Aruco -> Kinematics/Motor Angles pipeline failed")
-    
     print("Taring motors")
-    tare_motors(motor_angles)
+    motor_serial.tare_motors((REST_MOTOR_ANGLE, REST_MOTOR_ANGLE, REST_MOTOR_ANGLE))
 
-    # Waiting for start from user
-    print("Waiting for the joystick start")
-    wait_for_user(joystick_serial)
-
-    # Tele-op until keyboard cancellation
-    print("Starting tele-op")
+    # Main pipeline
+    print("Starting the main pipeline")
     try:
         while True:
-            actual_coord = joystick_decode(joystick_serial)
+            desired_coord = np.array([0, 0])
+            actual_coord = get_ball_position()
             dir_x, dir_y, theta_mag = pid.calculate(desired_coord, actual_coord)
             motor_angles = translate_dir_to_motor_angles(dir_x, dir_y, theta_mag)
-            send_encoded_motor_commands(motor_angles)
+            motor_serial.send_encoded_motor_commands(motor_angles)
             
             print(f"PID VECTOR: {(dir_x, dir_y, theta_mag)}")
             print(f"TX ANGLE: {motor_angles}")    
@@ -37,8 +37,12 @@ def main():
             time.sleep(0.01)
             
     except KeyboardInterrupt:
-        print("User Interrupt")
+        print("User Interrupt, exiting out of main loop")
+    
+    motor_serial.close()
 
-    close_serial(motor_serial, joystick_serial)
+
+
+
 if __name__ == "__main__":
     main()

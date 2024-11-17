@@ -17,7 +17,7 @@ def translate_dir_to_motor_angles(x_dir: float, y_dir: float, mag: float) -> tup
     
     dir = np.array([x_dir, y_dir])
     N = calculate_normal_from_dir_vec(dir, mag)
-    motor_angles = translate_N_to_motor_angles(N)
+    motor_angles = translate_N_to_motor_angles(N, DEFAULT_PLATE_HEIGHT)
     return motor_angles
     
 
