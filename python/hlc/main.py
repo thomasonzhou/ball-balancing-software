@@ -23,6 +23,7 @@ def main():
 
     # Main pipeline
     print("Starting the main pipeline")
+    """CURRENTLY JUST BALANCING THE BALL TO THE MIDDLE"""
     try:
         while True:
             desired_coord = np.array([0, 0])
