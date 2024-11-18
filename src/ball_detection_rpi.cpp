@@ -46,12 +46,12 @@ int main(int argc, char** argv)
     Mat frame, src_gray, display;
     VideoCapture cap;
     lccv::PiCamera cam;
-    cam.options->video_width=2312;
-    cam.options->video_height=1736;
-    cam.options->framerate=30;
+    cam.options->video_width=2312/2;
+    cam.options->video_height=1736/2;
+    cam.options->framerate=60;
     cam.startVideo();
 
-    namedWindow(windowName, WINDOW_AUTOSIZE);
+    namedWindow(windowName, WINDOW_NORMAL);
     int cannyThreshold = cannyThresholdInitialValue;
     int accumulatorThreshold = accumulatorThresholdInitialValue;
     
