@@ -2,7 +2,7 @@
 
 import numpy as np
 import numpy.typing as npt
-from kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
+from inverse_kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
 
 DEFAULT_PLATE_HEIGHT = 8 # cm, rel to shaft
 

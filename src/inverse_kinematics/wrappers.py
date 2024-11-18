@@ -2,16 +2,16 @@
 
 import numpy as np
 import numpy.typing as npt
-from kinematics.plate_kinematics import (
+from inverse_kinematics.plate_kinematics import (
     DEFAULT_PLATE_HEIGHT,
-    calculate_normal_from_dir_vec,
-    calculate_theta_phi_from_N,
     MOTOR_ORIENTATIONS,
     UNIT_K,
+    calculate_normal_from_dir_vec,
+    calculate_theta_phi_from_N,
     calculate_abs_motor_angle_from_li,
     calculate_li,
 )
-from kinematics.motor import Motor
+from inverse_kinematics.motor import Motor
 
 
 def get_plate_height():
