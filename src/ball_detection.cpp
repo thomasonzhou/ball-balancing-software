@@ -43,12 +43,14 @@ int main(int argc, char** argv)
     Mat frame, src_gray, display;
     VideoCapture cap;
 
-    cap.open(0);
+    cap.open("tcp://0.0.0.0:5000");
     if (!cap.isOpened())
     {
         cerr << "Error: Could not open the default camera.\n";
         return -1;
     }
+
+    cap.set(CAP_PROP_BUFFERSIZE, 1);
 
     namedWindow(windowName, WINDOW_AUTOSIZE);
     int cannyThreshold = cannyThresholdInitialValue;
@@ -64,6 +66,9 @@ int main(int argc, char** argv)
         if (!ret)
         {
             cerr << "Error: Couldn't capture video frame.\n";
+            if (step == 0) {
+                continue;
+            }
             break;
         }
 
