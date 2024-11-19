@@ -1,6 +1,7 @@
 """Full integration of software components with sanity checks"""
 
 import computer_vision
+import motion_planner
 import serial2py
 import inverse_kinematics
 import py2motor
@@ -38,7 +39,14 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
     # --------------------------------------------------
     controller = pid.Controller()
     ball_detector = computer_vision.BallDetector()
+    planner = motion_planner.MotionPlanner
+
+    # experimental trajectory
+    planner.load_square_trajectory()
+
     homing_completed = False
+
+    arduino_serial = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1)
 
     with serial.Serial(MOTOR_CONTROLLER_PORT, BAUD_RATE, timeout=1) as motor_serial:
         while not homing_completed:
@@ -46,15 +54,17 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             if homing_string and homing_string.decode("ascii").strip() == HOMING_COMPLETED_STRING:
                 homing_completed = True
 
-        with serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1) as arduino_serial:
             try:
                 while True:
                     match operation_mode:
                         case OperationMode.COMPUTER_VISION:
-                            # set target position
-                            target_position_plate_view = (0.0, 0.0)
                             # ball detection
                             ball_position_plate_view = ball_detector.get_ball_position_plate_view()
+
+                            # path planning
+                            target_position_plate_view = planner.update_target(
+                                ball_position_plate_view
+                            )
 
                             dir_x, dir_y, theta_rad = controller.calculate(
                                 desired_pos=target_position_plate_view,
@@ -67,9 +77,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                                 arduino_serial
                             )
                     # print(f"{dir_x:.2f}, {dir_y:.2f}, {theta_rad*180/math.pi:.2f}")
-                    # --------------------------------------------------
-                    # Inverse Kinematics
-                    # --------------------------------------------------
+
                     assert PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
 
                     # IK

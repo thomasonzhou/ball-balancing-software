@@ -15,6 +15,7 @@ packages = [
   "computer_vision",
   "core", 
   "inverse_kinematics", 
+  "motion_planner",
   "serial2py",
   "py2motor",
   "pid"
