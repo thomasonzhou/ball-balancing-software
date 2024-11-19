@@ -45,36 +45,41 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                 homing_completed = True
 
         with serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1) as arduino_serial:
-            while True:
-                match operation_mode:
-                    case OperationMode.COMPUTER_VISION:
-                        # set target position
-                        target_position_plate_view = (0.0, 0.0)
-                        # ball detection
-                        ball_position_plate_view = ball_detector.get_ball_position_plate_view()
+            try:
+                while True:
+                    match operation_mode:
+                        case OperationMode.COMPUTER_VISION:
+                            # set target position
+                            target_position_plate_view = (0.0, 0.0)
+                            # ball detection
+                            ball_position_plate_view = ball_detector.get_ball_position_plate_view()
 
-                        dir_x, dir_y, theta_rad = controller.calculate(
-                            desired_pos=target_position_plate_view,
-                            actual_pos=ball_position_plate_view,
-                        )
-                    case OperationMode.WASD_JOYSTICK:
-                        (dir_x, dir_y), theta_rad = serial2py.read_wasd()
-                    case OperationMode.ARDUINO_JOYSTICK:
-                        dir_x, dir_y, theta_rad = serial2py.read_arduino_joystick(arduino_serial)
-                # print(f"{dir_x:.2f}, {dir_y:.2f}, {theta_rad*180/math.pi:.2f}")
-                # --------------------------------------------------
-                # Inverse Kinematics
-                # --------------------------------------------------
-                assert PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
+                            dir_x, dir_y, theta_rad = controller.calculate(
+                                desired_pos=target_position_plate_view,
+                                actual_pos=ball_position_plate_view,
+                            )
+                        case OperationMode.WASD_JOYSTICK:
+                            (dir_x, dir_y), theta_rad = serial2py.read_wasd()
+                        case OperationMode.ARDUINO_JOYSTICK:
+                            dir_x, dir_y, theta_rad = serial2py.read_arduino_joystick(
+                                arduino_serial
+                            )
+                    # print(f"{dir_x:.2f}, {dir_y:.2f}, {theta_rad*180/math.pi:.2f}")
+                    # --------------------------------------------------
+                    # Inverse Kinematics
+                    # --------------------------------------------------
+                    assert PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
 
-                # IK
-                abs_motor_angles = inverse_kinematics.translate_dir_to_motor_angles(
-                    dir_x, dir_y, theta_rad
-                )
-                for angle in abs_motor_angles:
-                    assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD
+                    # IK
+                    abs_motor_angles = inverse_kinematics.translate_dir_to_motor_angles(
+                        dir_x, dir_y, theta_rad
+                    )
+                    for angle in abs_motor_angles:
+                        assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD
 
-                py2motor.write_to_motors(motor_serial, abs_motor_angles)
+                    py2motor.write_to_motors(motor_serial, abs_motor_angles)
+            except KeyboardInterrupt:
+                ball_detector.close_stream()
 
 
 if __name__ == "__main__":

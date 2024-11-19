@@ -71,6 +71,11 @@ class BallDetector:
         ball_position_top_view = camera_view_to_plate_view(ball_position_bottom_view)
         return ball_position_top_view
 
+    def close_stream(self):
+        self.cap.stop()
+        self.cap.stream.release()
+        cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     ball_detector = BallDetector(preview=True)
