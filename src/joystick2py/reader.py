@@ -25,13 +25,9 @@ def read_wasd() -> tuple[tuple[float, float], float]:
     raise NotImplementedError
     dir_x, dir_y = 0.0, 0.0
     theta_rad = 0.0
-
-    theta_rad = math.sqrt(dir_x**2 + dir_y**2) * MAX_PLATFORM_TILT_RAD / JOYSTICK_MAX_SCALING_FACTOR
-
-    print(dir_x, dir_y, theta_rad)
+    theta_rad = math.sqrt(dir_x**2 + dir_y**2) * MAX_PLATFORM_TILT_RAD
     return (dir_x, dir_y), theta_rad
 
 
 if __name__ == "__main__":
-    while True:
-        read_wasd()
+    pass
