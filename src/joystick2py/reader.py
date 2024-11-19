@@ -1,3 +1,4 @@
+"""Simple move with absolute positions"""
 import math
 
 MAX_PLATFORM_TILT_RAD = math.pi / 12.0
