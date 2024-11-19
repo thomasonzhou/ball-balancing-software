@@ -27,19 +27,21 @@ class MotionPlanner:
         return len(self._move_queue) == 0
 
     def load_square_trajectory(self, side_length=3.0):
+        """Square centered at (0,0)"""
         assert self.no_plan()
+        half = side_length / 2.0
         self._move_queue.extend(
             [
-                (side_length, side_length),
-                (side_length, -side_length),
-                (-side_length, -side_length),
-                (-side_length, side_length),
-                (side_length, side_length),
+                (half, half),
+                (half, -half),
+                (-half, -half),
+                (-half, half),
+                (half, half),
             ]
         )
 
     def load_triangle_trajectory(self, side_length=5.0):
-        """Unilateral triangle centered at 0,0"""
+        """Unilateral triangle centered at (0,0)"""
         assert self.no_plan()
         TRIANGLE_HEIGHT_RATIO = math.sqrt(3) / 2.0
 
@@ -55,7 +57,7 @@ class MotionPlanner:
         )
 
     def load_circle_trajectory(self, radius=5.0, num_points=36):
-        """Circle centered at 0,0"""
+        """Circle centered at (0,0)"""
         assert self.no_plan()
         for i in range(num_points):
             angle = (2 * math.pi / num_points) * i
