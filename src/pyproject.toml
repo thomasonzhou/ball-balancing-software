@@ -6,14 +6,18 @@ build-backend = "setuptools.build_meta"
 name = "PAAS"
 description = "The real deal"
 version = "0.0.1"
-dependencies = [
-  "numpy",
-  "pytest",
-  "pyserial",
-  "opencv-python"
-]
+dynamic = ["dependencies"]
 requires-python = ">= 3.9"
 authors = []
 
 [tool.setuptools]
-packages = ["inverse_kinematics", "core", "py2motor"]
+packages = [
+  "core", 
+  "inverse_kinematics", 
+  "joystick2py",
+  "py2motor",
+  "pid"
+]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}

@@ -1,3 +1,5 @@
 mte380_python_software.egg-info/
 __pycache__/
 .venv
+.DS_Store
+*.egg-info
