@@ -1,6 +1,7 @@
 """Full integration of software components with sanity checks"""
 
-import joystick2py
+import computer_vision
+import serial2py
 import inverse_kinematics
 import py2motor
 import pid
@@ -34,35 +35,32 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
     # Initialize Components
     # --------------------------------------------------
     controller = pid.Controller()
+    ball_detector = computer_vision.BallDetector()
     homing_completed = False
 
     with serial.Serial(MOTOR_CONTROLLER_PORT, BAUD_RATE, timeout=1) as motor_serial:
         while not homing_completed:
             homing_string = motor_serial.read()
-            if homing_string == HOMING_COMPLETED_STRING:
+            if homing_string and homing_string.decode("ascii").strip() == HOMING_COMPLETED_STRING:
                 homing_completed = True
 
         with serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1) as arduino_serial:
             while True:
                 match operation_mode:
                     case OperationMode.COMPUTER_VISION:
-                        # ball detection
-                        ball_position_plate_view = get_ball_position_plate_view()
-
                         # set target position
                         target_position_plate_view = (0.0, 0.0)
+                        # ball detection
+                        ball_position_plate_view = ball_detector.get_ball_position_plate_view()
 
-                        # target_direction_vector = (target) - (curr)
                         dir_x, dir_y, theta_rad = controller.calculate(
                             desired_pos=target_position_plate_view,
                             actual_pos=ball_position_plate_view,
                         )
-
-                        # assert direction vectors match
                     case OperationMode.WASD_JOYSTICK:
-                        (dir_x, dir_y), theta_rad = joystick2py.read_wasd()
+                        (dir_x, dir_y), theta_rad = serial2py.read_wasd()
                     case OperationMode.ARDUINO_JOYSTICK:
-                        dir_x, dir_y, theta_rad = joystick2py.read_arduino_joystick(arduino_serial)
+                        dir_x, dir_y, theta_rad = serial2py.read_arduino_joystick(arduino_serial)
                 # print(f"{dir_x:.2f}, {dir_y:.2f}, {theta_rad*180/math.pi:.2f}")
                 # --------------------------------------------------
                 # Inverse Kinematics
@@ -80,4 +78,5 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.ARDUINO_JOYSTICK)
+    # main(operation_mode=OperationMode.ARDUINO_JOYSTICK)
+    main(operation_mode=OperationMode.COMPUTER_VISION)

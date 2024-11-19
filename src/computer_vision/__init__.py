@@ -1,1 +1,1 @@
-from computer_vision.ball_detection import get_ball_position_plate_view
+from computer_vision.ball_detection import BallDetector

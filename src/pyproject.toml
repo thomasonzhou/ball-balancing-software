@@ -12,6 +12,7 @@ authors = []
 
 [tool.setuptools]
 packages = [
+  "computer_vision",
   "core", 
   "inverse_kinematics", 
   "serial2py",

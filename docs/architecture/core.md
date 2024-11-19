@@ -1,6 +1,9 @@
 ```mermaid
 flowchart LR
-    joystick2py --> inverse_kinematics --> py2motor
-    computer_vision --> inverse_kinematics
+    subgraph core.py
+        serial2py.read_arduino_joystick --> inverse_kinematics
+        computer_vision --> pid
+        pid --> inverse_kinematics --> pyserial_to_motors
+    end
 ```
 ![rendered mermaid architecture](image.png)
