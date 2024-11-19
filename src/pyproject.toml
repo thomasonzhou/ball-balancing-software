@@ -14,7 +14,7 @@ authors = []
 packages = [
   "core", 
   "inverse_kinematics", 
-  "joystick2py",
+  "serial2py",
   "py2motor",
   "pid"
 ]

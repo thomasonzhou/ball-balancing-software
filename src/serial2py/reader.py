@@ -2,7 +2,7 @@
 
 import math
 import serial
-from joystick2py.joystick_serial import joystick_decode, JoystickMode
+from serial2py.joystick_serial import joystick_decode
 
 MAX_PLATFORM_TILT_RAD = math.pi / 12.0
 JOYSTICK_MAX_SCALING_FACTOR = math.sqrt(2.0)
@@ -31,7 +31,7 @@ def read_arduino_joystick(joystick_serial: serial.Serial) -> tuple[float, float,
 
     res = None
     while res is None:
-        res = joystick_decode(joystick_serial, JoystickMode.JOYSTICK_AS_TILT_VECTOR)
+        res = joystick_decode(joystick_serial)
     square_x, square_y = res
 
     dir_x, dir_y = map_square_to_circle(square_x, square_y)
