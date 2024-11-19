@@ -4,9 +4,8 @@ import math
 import serial
 from serial2py.joystick_serial import joystick_decode
 
-MAX_PLATFORM_TILT_RAD = math.pi / 12.0
+MAX_PLATFORM_TILT_RAD = math.pi / 12.0  # 15 degrees
 JOYSTICK_MAX_SCALING_FACTOR = math.sqrt(2.0)
-EPSILON = 1e-3
 JOYSTICK_STEADY_STATE_X = 0.01
 JOYSTICK_STEADY_STATE_Y = 0.02
 
