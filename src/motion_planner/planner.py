@@ -11,7 +11,7 @@ class MotionPlanner:
 
     def update_target(self, current_position):
         """Advance to the next Movement if the end_condition of the current"""
-        if len(self._move_queue) > 0:
+        if len(self._move_queue) == 0:
             return DEFAULT_TARGET
 
         if all(
@@ -26,19 +26,37 @@ class MotionPlanner:
     def no_plan(self):
         return len(self._move_queue) == 0
 
-    def load_square_trajectory(self):
+    def load_square_trajectory(self, side_length=3.0):
         assert self.no_plan()
-        self._move_queue.extend([(3, 3), (3, -3), (-3, -3), (-3, 3), (3, 3)])
+        self._move_queue.extend(
+            [
+                (side_length, side_length),
+                (side_length, -side_length),
+                (-side_length, -side_length),
+                (-side_length, side_length),
+                (side_length, side_length),
+            ]
+        )
 
-    def load_triangle_trajectory(self):
+    def load_triangle_trajectory(self, side_length=5.0):
+        """Unilateral triangle centered at 0,0"""
         assert self.no_plan()
-        self._move_queue.extend([])
-        self._move_queue.extend([])
+        TRIANGLE_HEIGHT_RATIO = math.sqrt(3) / 2.0
 
-    def load_circle_trajectory(self):
+        half_height = TRIANGLE_HEIGHT_RATIO * side_length / 2.0
+
+        self._move_queue.extend(
+            [
+                (0, -half_height),
+                (side_length / 2.0, half_height),
+                (-side_length / 2.0, half_height),
+                (0, -half_height),
+            ]
+        )
+
+    def load_circle_trajectory(self, radius=5.0, num_points=36):
+        """Circle centered at 0,0"""
         assert self.no_plan()
-        radius = 5
-        num_points = 36
         for i in range(num_points):
             angle = (2 * math.pi / num_points) * i
             x = radius * math.cos(angle)

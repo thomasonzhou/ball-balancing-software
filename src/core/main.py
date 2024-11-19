@@ -39,7 +39,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
     # --------------------------------------------------
     controller = pid.Controller()
     ball_detector = computer_vision.BallDetector()
-    planner = motion_planner.MotionPlanner
+    planner = motion_planner.MotionPlanner()
 
     # experimental trajectory
     planner.load_square_trajectory()
