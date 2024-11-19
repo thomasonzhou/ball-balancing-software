@@ -1,24 +1,25 @@
 """Simple move with absolute positions"""
 import math
+import serial
+from joystick2py.joystick_serial import joystick_decode, JoystickMode
 
 MAX_PLATFORM_TILT_RAD = math.pi / 12.0
 JOYSTICK_MAX_SCALING_FACTOR = math.sqrt(2.0)
 
 
-def read_arduino_joystick() -> tuple[tuple[float, float], float]:
+def read_arduino_joystick(joystick_serial: serial.Serial) -> tuple[float, float, float]:
     """Translate x and y joystick position on a scale of -1.0 to 1.0 into plate values"""
 
-    raise NotImplementedError
-    # from serial (stub)
-    input_line = "1.0, 1.0"
+    res = None
+    while res is None:
+        res = joystick_decode(joystick_serial, JoystickMode.JOYSTICK_AS_TILT_VECTOR)
+    x, y = res
 
-    raw_xy = tuple(float(coord.strip()) for coord in input_line.split(","))
-
-    scaling_factor = math.sqrt(sum(val * val for val in raw_xy))
+    scaling_factor = math.sqrt(x * x + y * y)
     theta_rad = MAX_PLATFORM_TILT_RAD * (scaling_factor / JOYSTICK_MAX_SCALING_FACTOR)
 
-    scaled_xy = tuple(val / scaling_factor for val in raw_xy)
-    return scaled_xy, theta_rad
+    scaled_x, scaled_y = x / scaling_factor, y/scaling_factor
+    return scaled_x, scaled_y, theta_rad
 
 
 def read_wasd() -> tuple[tuple[float, float], float]:

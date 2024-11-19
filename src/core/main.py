@@ -27,8 +27,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
     # --------------------------------------------------
     controller = pid.Controller()
 
-    # tare_motors
-
     while True:
         match operation_mode:
             case OperationMode.COMPUTER_VISION:
@@ -48,7 +46,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             case OperationMode.WASD_JOYSTICK:
                 (dir_x, dir_y), theta_rad = joystick2py.read_wasd()
             case OperationMode.ARDUINO_JOYSTICK:
-                (dir_x, dir_y), theta_rad = joystick2py.read_arduino_joystick()
+                dir_x, dir_y, theta_rad = joystick2py.read_arduino_joystick()
         # --------------------------------------------------
         # Inverse Kinematics
         # --------------------------------------------------
@@ -67,4 +65,4 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.WASD_JOYSTICK)
+    main(operation_mode=OperationMode.ARDUINO_JOYSTICK)
