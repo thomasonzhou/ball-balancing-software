@@ -14,7 +14,7 @@ import serial
 HOMING_STRING = "HOME"
 
 PLATFORM_TILT_MIN_RAD = 0.0
-PLATFORM_TILT_MAX_RAD = math.pi / 12.0
+PLATFORM_TILT_MAX_RAD = math.radians(9.0)
 MOTOR_MIN_DEG = -52.0
 MOTOR_MAX_DEG = 52.0
 
@@ -87,7 +87,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
                 PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
             ), f"theta_rad OOB: {theta_rad}"
 
-            theta_rad /= ANGLE_REDUCTION_FACTOR
+            # theta_rad /= ANGLE_REDUCTION_FACTOR
 
             # IK
             abs_motor_angles = inverse_kinematics.translate_dir_to_motor_angles(
