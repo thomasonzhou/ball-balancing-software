@@ -1,5 +1,4 @@
 import math
-import termplotlib as tpl
 
 MIN_ANGLE_TO_MOVE = math.radians(0.5)
 
@@ -36,8 +35,6 @@ class Controller:
         self.int_y = 0
 
         self.print_errors = print_errors
-        if self.print_errors:
-            self.fig = tpl.figure()
 
     def calculate(
         self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]
@@ -77,12 +74,7 @@ class Controller:
         i_y = self.ki * self.int_y
 
         if self.print_errors:
-            # print(f"p: {p_x:.5f}, {p_y:.5f}, d: {d_x:.5f}, {d_y:.5f}, i: {i_x:.5f}, {i_y:.5f}")
-            self.fig.barh(
-                ["|Px|", "|Py|", "|Dx|", "|Dy|", "|Ix|", "|Iy|"],
-                [abs(p_x), abs(p_y), abs(d_x), abs(d_y), abs(i_x), abs(i_y)],
-            )
-            self.fig.show()
+            print(f"p: {p_x:.5f}, {p_y:.5f}, d: {d_x:.5f}, {d_y:.5f}, i: {i_x:.5f}, {i_y:.5f}")
 
         # Update error
         self.prev_e_x = e_x
