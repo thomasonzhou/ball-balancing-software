@@ -1,7 +1,6 @@
 from computer_vision.transforms import scale_pixels_to_centimeters, camera_view_to_plate_view
 import cv2
 import numpy as np
-from collections import deque
 
 QUEUE_SIZE = 7
 
@@ -17,15 +16,14 @@ class BallDetector:
         self.preview = preview
         self.last_ball_position = (0.0, 0.0)
 
-        self.moving_avg_queue = deque()
-        total = [0.0, 0.0]
-        for _ in range(QUEUE_SIZE):
-            ball_pos = self._get_ball_position_top_view()
-            self.moving_avg_queue.append(ball_pos)
-            total[0] += ball_pos[0]
-            total[1] += ball_pos[1]
-        self.moving_avg = [total[0] / QUEUE_SIZE, total[1] / QUEUE_SIZE]
-        self.count = 0
+        # self.moving_avg_queue = deque()
+        # total = [0.0, 0.0]
+        # for _ in range(QUEUE_SIZE):
+        #     ball_pos = self._get_ball_position_top_view()
+        #     self.moving_avg_queue.append(ball_pos)
+        #     total[0] += ball_pos[0]
+        #     total[1] += ball_pos[1]
+        # self.moving_avg = [total[0] / QUEUE_SIZE, total[1] / QUEUE_SIZE]
 
     def _get_frame(self):
         ret = None
@@ -50,7 +48,7 @@ class BallDetector:
             param1=102,  # Higher threshold for Canny
             param2=33,  # Accumulator threshold for circle detection
             minRadius=40,  # Minimum radius of circles
-            maxRadius=60,  # Maximum radius of circles
+            maxRadius=80,  # Maximum radius of circles
         )
 
         if circles is not None:
@@ -75,9 +73,11 @@ class BallDetector:
 
     def _get_ball_position_camera_view(self):
         circle_position_pixels = self._get_circle_coord_in_pixels()
+        print(f"pixels: {circle_position_pixels}")
         ball_position_centimeters = scale_pixels_to_centimeters(
             circle_position_pixels, self.RES_HEIGHT
         )
+        print(f"cm: {ball_position_centimeters}")
         return ball_position_centimeters
 
     def _get_ball_position_top_view(self):
@@ -88,18 +88,19 @@ class BallDetector:
 
     def get_avg_ball_position_plate_view(self):
         to_add = self._get_ball_position_top_view()
-        self.moving_avg_queue.append(to_add)
+        return to_add
+        # self.moving_avg_queue.append(to_add)
 
-        to_remove = self.moving_avg_queue.popleft()
+        # to_remove = self.moving_avg_queue.popleft()
 
-        self.moving_avg[0] += to_add[0] - to_remove[0]
-        self.moving_avg[1] += to_add[1] - to_remove[1]
+        # self.moving_avg[0] += to_add[0] - to_remove[0]
+        # self.moving_avg[1] += to_add[1] - to_remove[1]
 
-        self.count += 1
-        if self.count % 10 == 0:
-            print(f"moving_avg: {self.moving_avg}")
+        # self.count += 1
+        # if self.count % 10 == 0:
+        #     print(f"moving_avg: {self.moving_avg}")
 
-        return self.moving_avg
+        # return self.moving_avg
 
     def close_stream(self):
         self.cap.release()
