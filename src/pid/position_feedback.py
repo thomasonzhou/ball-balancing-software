@@ -15,7 +15,7 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
     return max(min(sat_max, control), sat_min)
 
 
-MIN_DIRECTION_ERROR_TO_MOVE = 0.1
+MIN_DIRECTION_ERROR_TO_MOVE = 0.001
 
 
 class Controller:
