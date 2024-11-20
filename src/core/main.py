@@ -74,10 +74,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
         while True:
             count += 1
 
-            if planner.no_plan():
-                # experimental trajectory
-                planner.load_square_trajectory()
-
             match operation_mode:
                 case OperationMode.COMPUTER_VISION:
                     # ball detection
@@ -89,6 +85,9 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
 
                     # path planning
                     target_position_plate_view = planner.update_target(ball_position_plate_view)
+                    if planner.no_plan():
+                        # experimental trajectory
+                        planner.load_square_trajectory()
 
                     dir_x, dir_y, theta_rad = controller.calculate(
                         desired_pos=target_position_plate_view,
