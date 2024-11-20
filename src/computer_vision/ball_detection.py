@@ -9,7 +9,7 @@ class BallDetector:
     def __init__(self, camera_index=0, preview=False):
         self.cap = cv2.VideoCapture(camera_index)
         self.RES_WIDTH = 480
-        self.RES_HEIGHT = 270
+        self.RES_HEIGHT = 480
         self.WINDOW_NAME = "Ball Detection"
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.RES_WIDTH)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.RES_HEIGHT)
