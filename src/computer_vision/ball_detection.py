@@ -66,7 +66,7 @@ class BallDetector:
         elif self.memory:
             relative_x, relative_y = self.last_ball_position
         else:
-            relative_x, relative_x = 0, 0
+            relative_x, relative_y = 0, 0
 
         if self.preview:
             cv2.circle(frame, (center_x, center_y), 2, (255, 0, 0), -1)
