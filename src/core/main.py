@@ -21,9 +21,8 @@ MOTOR_MAX_DEG = 51.0
 MOTOR_MIN_RAD = math.radians(MOTOR_MIN_DEG)
 MOTOR_MAX_RAD = math.radians(MOTOR_MAX_DEG)
 
-ARDUINO_PORT = "/dev/cu.usbmodem11301"
-MOTOR_CONTROLLER_PORT = "/dev/cu.usbserial-10"
-# other ports: 'COM5' '/dev/ttyUSB0' "/dev/cu.usbmodem1301" "/dev/cu.usbmodem1401" "/dev/cu.usbserial-130"
+ARDUINO_PORT = "/dev/ttyACM0"
+MOTOR_CONTROLLER_PORT = "/dev/ttyUSB0"
 BAUD_RATE = 115200
 
 
