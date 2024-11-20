@@ -25,7 +25,7 @@ class Controller:
     # Define PID gains and time interval
     kp = 0.5
     ki = 0
-    kd = 0
+    kd = 0.1
     dt = 0.1
 
     def __init__(self, print_errors=False):
