@@ -10,7 +10,6 @@ import pid
 import math
 from enum import Enum
 import serial
-import time
 
 HOMING_STRING = "HOME"
 
@@ -62,8 +61,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                 print("HOME detected")
                 homing_completed = True
     py2motor.write_to_motors(motor_serial, (0, 0, 0))
-
-    last_command_sent = time.time()
     try:
         while True:
             match operation_mode:
@@ -97,11 +94,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             for angle in abs_motor_angles:
                 assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD, f"angle {angle} OOB"
 
-            curr_time = time.time() * 1000
-            if curr_time - last_command_sent >= 50:
-                last_command_sent = curr_time
-                py2motor.write_to_motors(motor_serial, abs_motor_angles)
-
     except KeyboardInterrupt:
         ball_detector.close_stream()
         if operation_mode == OperationMode.ARDUINO_JOYSTICK:
@@ -110,4 +102,4 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.ARDUINO_JOYSTICK)
+    main(operation_mode=OperationMode.COMPUTER_VISION)
