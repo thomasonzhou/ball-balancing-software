@@ -110,4 +110,4 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.COMPUTER_VISION)
+    main(operation_mode=OperationMode.ARDUINO_JOYSTICK)
