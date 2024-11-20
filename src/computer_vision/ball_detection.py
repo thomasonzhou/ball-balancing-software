@@ -46,7 +46,7 @@ class BallDetector:
             dp=1.2,  # Inverse ratio of the accumulator resolution to image resolution
             minDist=50,  # Minimum distance between detected centers
             param1=102,  # Higher threshold for Canny
-            param2=33,  # Accumulator threshold for circle detection
+            param2=25,  # Accumulator threshold for circle detection
             minRadius=40,  # Minimum radius of circles
             maxRadius=80,  # Maximum radius of circles
         )
