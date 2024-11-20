@@ -19,7 +19,7 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
 
 class Controller:
     # Define PID gains and time interval
-    kp = 0.15
+    kp = 0.14
     ki = 0
     kd = 1.5
     dt = 0.1
@@ -91,6 +91,6 @@ class Controller:
             saturate(theta_mag, self.SAT_MIN_DEGREES, self.SAT_MAX_DEGREES)
         )
         if sat_theta_mag < MIN_ANGLE_TO_MOVE:
-            theta_mag_with_dead_zone = 0
+            sat_theta_mag = 0
 
-        return dir_x, dir_y, theta_mag_with_dead_zone
+        return dir_x, dir_y, sat_theta_mag
