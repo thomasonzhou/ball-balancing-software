@@ -144,8 +144,8 @@ if __name__ == "__main__":
         debug_mode=False,
     )
     # main(
-    #     pid_mode=pid.PID_Mode.DisturbanceRejection,
-    #     operation_mode=OperationMode.COMPUTER_VISION,
-    #     planner=motion_planner.LoopType.NONE,
+    #     pid.PID_Mode.DisturbanceRejection,
+    #     OperationMode.COMPUTER_VISION,
+    #     motion_planner.LoopType.NONE,
     #     debug_mode=False,
     # )
