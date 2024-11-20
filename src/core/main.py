@@ -48,19 +48,13 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
     if operation_mode == OperationMode.ARDUINO_JOYSTICK:
         arduino_serial = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1)
     motor_serial = serial.Serial(MOTOR_CONTROLLER_PORT, BAUD_RATE, timeout=1)
-    motor_serial.write("<h>\r\n".encode('ascii'))
-    received = ""
+    motor_serial.write("<h>\r\n".encode("ascii"))
+
     while not homing_completed:
-        print(f"sent {HOMING_STRING}")
-        # while len(motor_serial.)
-        # while motor_serial.in_waiting == 0:
-        #     # print("waiting")
-        #     continue
+        motor_serial.write("<h>\r".encode("ascii"))
         if motor_serial.in_waiting > 0:
-            homing_string = motor_serial.read(motor_serial.in_waiting)
-            decoded = homing_string.decode('ascii').strip()
-            received += decoded
-            print(f"got {recieved}")
+            homing_string = motor_serial.read(size=4)
+            received = homing_string.decode("ascii").strip()
         if HOMING_STRING in received:
             print("HOME detected")
             homing_completed = True
@@ -99,6 +93,9 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             py2motor.write_to_motors(motor_serial, abs_motor_angles)
     except KeyboardInterrupt:
         ball_detector.close_stream()
+        if operation_mode == OperationMode.ARDUINO_JOYSTICK:
+            arduino_serial.close()
+        motor_serial.close()
 
 
 if __name__ == "__main__":
