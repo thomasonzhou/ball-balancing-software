@@ -137,15 +137,15 @@ def main(
 
 
 if __name__ == "__main__":
-    # main(
-    #     pid_mode=pid.PID_Mode.PathPlanning,
-    #     operation_mode=OperationMode.COMPUTER_VISION,
-    #     motion_planner=motion_planner.LoopType.TRIANGLE,
-    #     debug_mode=True,
-    # )
     main(
-        pid_mode=pid.PID_Mode.DisturbanceRejection,
+        pid_mode=pid.PID_Mode.PathPlanning,
         operation_mode=OperationMode.COMPUTER_VISION,
-        planner=motion_planner.LoopType.NONE,
+        motion_planner=motion_planner.LoopType.TRIANGLE,
         debug_mode=True,
     )
+    # main(
+    #     pid_mode=pid.PID_Mode.DisturbanceRejection,
+    #     operation_mode=OperationMode.COMPUTER_VISION,
+    #     planner=motion_planner.LoopType.NONE,
+    #     debug_mode=True,
+    # )
