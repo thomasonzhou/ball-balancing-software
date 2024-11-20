@@ -34,7 +34,7 @@ class PID_Parameters:
 
 class PID_Mode(Enum):
     DisturbanceRejection = PID_Parameters(kp=0.80, ki=0.01, kd=0.55)  # high rise time
-    PathPlanning = PID_Parameters(kp=-0.1, ki=0.9, kd=0.2)  # quick convergence with no disturbance
+    PathPlanning = PID_Parameters(kp=1.0, ki=0.1, kd=1.0)  # quick convergence with no disturbance
 
 
 class Controller:
