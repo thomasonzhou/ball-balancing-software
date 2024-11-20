@@ -73,11 +73,11 @@ class BallDetector:
 
     def _get_ball_position_camera_view(self):
         circle_position_pixels = self._get_circle_coord_in_pixels()
-        print(f"pixels: {circle_position_pixels}")
+        print(f"pixels: {list(p.item() for p in circle_position_pixels)}")
         ball_position_centimeters = scale_pixels_to_centimeters(
             circle_position_pixels, self.RES_HEIGHT
         )
-        print(f"cm: {ball_position_centimeters}")
+        print(f"cm: {list(b.item() for b in ball_position_centimeters)}")
         return ball_position_centimeters
 
     def _get_ball_position_top_view(self):
