@@ -143,9 +143,9 @@ if __name__ == "__main__":
         motion_planner=motion_planner.LoopType.TRIANGLE,
         debug_mode=True,
     )
-    main(
-        pid.PID_Mode.DisturbanceRejection,
-        operation_mode=OperationMode.COMPUTER_VISION,
-        motion_planner=motion_planner.LoopType.NONE,
-        debug_mode=True,
-    )
+    # main(
+    #     pid.PID_Mode.DisturbanceRejection,
+    #     operation_mode=OperationMode.COMPUTER_VISION,
+    #     motion_planner=motion_planner.LoopType.NONE,
+    #     debug_mode=True,
+    # )
