@@ -15,11 +15,14 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
     return max(min(sat_max, control), sat_min)
 
 
+MIN_DIRECTION_ERROR_TO_MOVE = 1.0
+
+
 class Controller:
     # Define PID gains and time interval
-    kp = 0.20
+    kp = 0.25
     ki = 0
-    kd = 2.5
+    kd = 1.5
     dt = 0.1
     SAT_MAX_DEGREES = 9
     SAT_MIN_DEGREES = 0
@@ -88,5 +91,10 @@ class Controller:
         sat_theta_mag = math.radians(
             saturate(theta_mag, self.SAT_MIN_DEGREES, self.SAT_MAX_DEGREES)
         )
+
+        if abs(dir_x) < MIN_DIRECTION_ERROR_TO_MOVE:
+            dir_x = 0
+        if abs(dir_y) < MIN_DIRECTION_ERROR_TO_MOVE:
+            dir_y = 0
 
         return dir_x, dir_y, sat_theta_mag
