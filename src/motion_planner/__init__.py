@@ -1,1 +1,1 @@
-from motion_planner.planner import MotionPlanner
+from motion_planner.planner import MotionPlanner, LoopType

@@ -1,4 +1,6 @@
 import math
+from enum import Enum
+from dataclasses import dataclass
 
 MIN_ANGLE_TO_MOVE = math.radians(0.5)
 
@@ -23,14 +25,25 @@ SAT_MIN_DEGREES = 0
 INTEGRAL_BOUND = 0.4
 
 
+@dataclass
+class PID_Parameters:
+    kp: float
+    ki: float
+    kd: float
+
+
+class PID_Mode(Enum):
+    DisturbanceRejection = PID_Parameters(kp=0.80, ki=0.01, kd=0.55)  # high rise time
+    PathPlanning = PID_Parameters(kp=0.8, ki=0.1, kd=1.2)  # quick convergence with no disturbance
+
+
 class Controller:
-    # Define PID gains and time interval
-    kp = 0.80
-    ki = 0.01
-    kd = 0.55
     dt = 0.1
 
-    def __init__(self, print_errors=False, dead_zone=False):
+    def __init__(self, pid_mode: PID_Mode, print_errors=False, dead_zone=False):
+        self.kp = pid_mode.value.kp
+        self.ki = pid_mode.value.ki
+        self.kd = pid_mode.value.kd
         self.prev_e_x = 0
         self.prev_e_y = 0
         self.int_x = 0

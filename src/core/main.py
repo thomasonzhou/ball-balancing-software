@@ -37,17 +37,20 @@ class OperationMode(Enum):
     ARDUINO_JOYSTICK = 3
 
 
-def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mode=False):
+def main(
+    pid_mode,
+    operation_mode=OperationMode.COMPUTER_VISION,
+    motion_planner=motion_planner.LoopType.NONE,
+    motors_on=True,
+    debug_mode=False,
+):
     # --------------------------------------------------
     # Initialize Components
     # --------------------------------------------------
-    controller = pid.Controller(print_errors=debug_mode, dead_zone=True)
-    planner = motion_planner.MotionPlanner()
+    controller = pid.Controller(pid_mode, print_errors=debug_mode, dead_zone=True)
+    planner = motion_planner.MotionPlanner(motion_planner)
     if operation_mode == OperationMode.COMPUTER_VISION:
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
-
-    # experimental trajectory
-    # planner.load_square_trajectory()
 
     homing_completed = False
     if operation_mode == OperationMode.ARDUINO_JOYSTICK:
@@ -84,8 +87,8 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
                         f"ball position (top view): {list(round(b, 3) for b in ball_position_plate_view)}"
                     )
 
-                    # path planning
                     target_position_plate_view = planner.update_target(ball_position_plate_view)
+                    try_print(f"target position: {target_position_plate_view}")
 
                     dir_x, dir_y, theta_rad = controller.calculate(
                         desired_pos=target_position_plate_view,
@@ -134,4 +137,15 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.COMPUTER_VISION, debug_mode=True)
+    main(
+        pid.PID_Mode.PathPlanning,
+        operation_mode=OperationMode.COMPUTER_VISION,
+        motion_planner=motion_planner.LoopType.TRIANGLE,
+        debug_mode=True,
+    )
+    # main(
+    #     pid.PID_Mode.DisturbanceRejection,
+    #     operation_mode=OperationMode.COMPUTER_VISION,
+    #     motion_planner=motion_planner.LoopType.NONE,
+    #     debug_mode=True,
+    # )
