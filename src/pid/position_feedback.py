@@ -20,11 +20,13 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
 SAT_MAX_DEGREES = 8.25
 SAT_MIN_DEGREES = 0
 
+INTEGRAL_BOUND = 0.4
+
 
 class Controller:
     # Define PID gains and time interval
     kp = 0.80
-    ki = 0.1
+    ki = 0.01
     kd = 0.55
     dt = 0.1
 
@@ -73,6 +75,17 @@ class Controller:
         self.int_y += e_y * self.dt
         i_x = self.ki * self.int_x
         i_y = self.ki * self.int_y
+
+        # prevent windup
+        if i_x > INTEGRAL_BOUND:
+            i_x = INTEGRAL_BOUND
+        elif i_x < -INTEGRAL_BOUND:
+            i_x = -INTEGRAL_BOUND
+
+        if i_y > INTEGRAL_BOUND:
+            i_y = INTEGRAL_BOUND
+        elif i_y < -INTEGRAL_BOUND:
+            i_y = -INTEGRAL_BOUND
 
         if self.print_errors:
             print(f"p: {p_x:.5f}, {p_y:.5f}, d: {d_x:.5f}, {d_y:.5f}, i: {i_x:.5f}, {i_y:.5f}")
