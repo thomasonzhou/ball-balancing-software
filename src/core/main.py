@@ -134,4 +134,4 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.COMPUTER_VISION, debug_mode=True)
+    main(operation_mode=OperationMode.COMPUTER_VISION, debug_mode=False)
