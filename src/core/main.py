@@ -23,6 +23,8 @@ ANGLE_REDUCTION_FACTOR = 2.0
 MOTOR_MIN_RAD = math.radians(MOTOR_MIN_DEG)
 MOTOR_MAX_RAD = math.radians(MOTOR_MAX_DEG)
 
+SHUTDOWN_MOTOR_RAD = math.radians(-40)
+
 ARDUINO_PORT = "/dev/ttyACM0"
 MOTOR_CONTROLLER_PORT = "/dev/ttyUSB0"
 BAUD_RATE = 115200
@@ -112,6 +114,10 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
                 py2motor.write_to_motors(motor_serial, abs_motor_angles)
 
     except KeyboardInterrupt:
+        if motors_on:
+            py2motor.write_to_motors(
+                motor_serial, (SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD)
+            )
         match operation_mode:
             case OperationMode.COMPUTER_VISION:
                 ball_detector.close_stream()
