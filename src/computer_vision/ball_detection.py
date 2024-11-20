@@ -25,6 +25,7 @@ class BallDetector:
             total[0] += ball_pos[0]
             total[1] += ball_pos[1]
         self.moving_avg = [total[0] / QUEUE_SIZE, total[1] / QUEUE_SIZE]
+        self.count = 0
 
     def _get_frame(self):
         ret = None
@@ -93,7 +94,10 @@ class BallDetector:
 
         self.moving_avg[0] += to_add[0] - to_remove[0]
         self.moving_avg[1] += to_add[1] - to_remove[1]
-        print(f"moving_avg: {self.moving_avg}")
+
+        self.count += 1
+        if self.count % 10 == 0:
+            print(f"moving_avg: {self.moving_avg}")
 
         return self.moving_avg
 
