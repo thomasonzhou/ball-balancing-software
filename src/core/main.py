@@ -74,7 +74,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
 
             if planner.no_plan():
                 # experimental trajectory
-                planner.load_square_trajectory()
+                planner.load_circle_trajectory()
 
             match operation_mode:
                 case OperationMode.COMPUTER_VISION:
