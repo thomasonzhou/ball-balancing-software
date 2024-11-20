@@ -52,17 +52,17 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
     homing_completed = False
     if operation_mode == OperationMode.ARDUINO_JOYSTICK:
         arduino_serial = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1)
-    motor_serial = serial.Serial(MOTOR_CONTROLLER_PORT, BAUD_RATE, timeout=1)
 
-    while not homing_completed:
-        motor_serial.write("<h>\r".encode("ascii"))
-        if motor_serial.in_waiting > 0:
-            homing_string = motor_serial.read(size=4)
-            received = homing_string.decode("ascii").strip()
-            if HOMING_STRING in received:
-                print("HOME detected")
-                homing_completed = True
     if motors_on:
+        motor_serial = serial.Serial(MOTOR_CONTROLLER_PORT, BAUD_RATE, timeout=1)
+        while not homing_completed:
+            motor_serial.write("<h>\r".encode("ascii"))
+            if motor_serial.in_waiting > 0:
+                homing_string = motor_serial.read(size=4)
+                received = homing_string.decode("ascii").strip()
+                if HOMING_STRING in received:
+                    print("HOME detected")
+                    homing_completed = True
         py2motor.write_to_motors(motor_serial, (0, 0, 0))
 
     count = 0
@@ -118,17 +118,19 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
                 py2motor.write_to_motors(motor_serial, abs_motor_angles)
 
     except KeyboardInterrupt:
-        if motors_on:
-            py2motor.write_to_motors(
-                motor_serial, (SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD)
-            )
-            time.sleep(0.5)
         match operation_mode:
             case OperationMode.COMPUTER_VISION:
                 ball_detector.close_stream()
             case OperationMode.ARDUINO_JOYSTICK:
                 arduino_serial.close()
-        motor_serial.close()
+
+    finally:
+        if motors_on:
+            py2motor.write_to_motors(
+                motor_serial, (SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD)
+            )
+            time.sleep(0.5)
+            motor_serial.close()
 
 
 if __name__ == "__main__":
