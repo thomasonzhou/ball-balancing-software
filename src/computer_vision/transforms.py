@@ -1,6 +1,6 @@
 import numpy as np
 
-PLATE_RADIUS_CM = 13.0
+PLATE_RADIUS_CM = 8.0
 
 
 def scale_pixels_to_centimeters(circle_position_pixels, pixels_h):
