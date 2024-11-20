@@ -42,7 +42,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
     # Initialize Components
     # --------------------------------------------------
     controller = pid.Controller(
-        pid_params=pid.PID_Mode.PathPlanning, print_errors=debug_mode, dead_zone=True
+        pid_mode=pid.PID_Mode.PathPlanning, print_errors=debug_mode, dead_zone=True
     )
     planner = motion_planner.MotionPlanner()
     if operation_mode == OperationMode.COMPUTER_VISION:
