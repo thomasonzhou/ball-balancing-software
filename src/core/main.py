@@ -41,7 +41,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
     controller = pid.Controller()
     planner = motion_planner.MotionPlanner()
     if operation_mode == OperationMode.COMPUTER_VISION:
-        ball_detector = computer_vision.BallDetector()
+        ball_detector = computer_vision.BallDetector(preview=True)
 
     # experimental trajectory
     # planner.load_square_trajectory()
