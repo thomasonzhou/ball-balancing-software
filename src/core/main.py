@@ -76,7 +76,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
             match operation_mode:
                 case OperationMode.COMPUTER_VISION:
                     # ball detection
-                    ball_position_plate_view = ball_detector.get_ball_position_plate_view()
+                    ball_position_plate_view = ball_detector.get_avg_ball_position_plate_view()
 
                     try_print(f"ball position (top view): {ball_position_plate_view}")
 
