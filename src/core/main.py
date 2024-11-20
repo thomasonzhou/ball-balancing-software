@@ -94,6 +94,8 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             for angle in abs_motor_angles:
                 assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD, f"angle {angle} OOB"
 
+            py2motor.write_to_motors(motor_serial, abs_motor_angles)
+
     except KeyboardInterrupt:
         ball_detector.close_stream()
         if operation_mode == OperationMode.ARDUINO_JOYSTICK:
