@@ -79,7 +79,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                     (dir_x, dir_y), theta_rad = serial2py.read_wasd()
                 case OperationMode.ARDUINO_JOYSTICK:
                     dir_x, dir_y, theta_rad = serial2py.read_arduino_joystick(arduino_serial)
-            print(f"{dir_x:.2f}, {dir_y:.2f}, {math.radians(theta_rad):.5f}")
+            print(f"{dir_x:.2f}, {dir_y:.2f}, deg: {math.degrees(theta_rad):.5f}")
 
             assert (
                 PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
@@ -94,6 +94,8 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             for angle in abs_motor_angles:
                 assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD, f"angle {angle} OOB"
 
+            print(f"send to IK: {(math.degrees(a) for a in abs_motor_angles)}")
+            print()
             py2motor.write_to_motors(motor_serial, abs_motor_angles)
 
     except KeyboardInterrupt:
