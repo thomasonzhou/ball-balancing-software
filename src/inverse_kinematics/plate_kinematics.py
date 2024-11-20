@@ -4,7 +4,7 @@ import numpy as np
 import numpy.typing as npt
 from inverse_kinematics.motor import Motor, MOTOR_LEG_LENGTH, PLATE_LEG_LENGTH
 
-DEFAULT_PLATE_HEIGHT = 9  # cm, rel to shaft
+DEFAULT_PLATE_HEIGHT = 10  # cm, rel to shaft
 
 # See `motor_orientations.png`
 MOTOR_ORIENTATIONS = [
