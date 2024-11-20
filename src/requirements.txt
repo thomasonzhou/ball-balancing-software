@@ -1,0 +1,4 @@
+numpy
+pytest
+pyserial
+opencv-python

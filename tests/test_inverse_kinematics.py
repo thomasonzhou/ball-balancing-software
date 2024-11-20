@@ -1,10 +1,10 @@
 import numpy as np
 import pytest
-from kinematics.motor import (
+from inverse_kinematics.motor import (
         MOTOR_DIST_FROM_ORIGIN, 
         PLATE_DIST_FROM_ORIGIN
 )
-from kinematics.plate_kinematics import (
+from inverse_kinematics.plate_kinematics import (
     UNIT_K, 
     calculate_normal_from_dir_vec,
     calculate_angle_from_cosine, 
@@ -75,7 +75,7 @@ KNOWN_MOTOR_ANGLE_PAIR = {
 }
 
 
-@pytest.mark.helper
+@pytest.mark.math_helper
 def test_calculate_cosine():
     """Tests the cosine helper function to ensure it outputs the correct angles"""
     known_a = [1, np.pi/2]
@@ -113,7 +113,7 @@ def test_calculate_theta_phi_from_N():
             assert known_angle == output_angle
 
 
-@pytest.mark.helper
+@pytest.mark.math_helper
 def test_calculate_xy_rotation_matrix():
     """Tests the calculation of the right rotation matrix given tilt angles"""
     for value in KNOWN_N_ANGLE_PAIR.values():
