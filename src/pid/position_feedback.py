@@ -21,7 +21,7 @@ class Controller:
     ki = 0
     kd = 0.05
     dt = 0.1
-    SAT_MAX_DEGREES = 15
+    SAT_MAX_DEGREES = 9
     SAT_MIN_DEGREES = 0
 
     def __init__(self):
