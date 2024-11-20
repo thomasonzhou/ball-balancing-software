@@ -16,9 +16,10 @@ class LoopType(Enum):
 
 
 class MotionPlanner:
-    def __init__(self, loop: LoopType = LoopType.NONE):
+    def __init__(self, loop_type: LoopType = LoopType.NONE):
         self._move_queue = deque()
         self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
+        self.loop_type = loop_type
 
     def update_target(self, current_position):
         """Advance to the next Movement if the end_condition of the current"""
@@ -41,8 +42,8 @@ class MotionPlanner:
     def no_plan(self):
         return len(self._move_queue) == 0
 
-    def _append_to_move_queue(self, loop_type: LoopType):
-        match loop_type:
+    def _append_to_move_queue(self):
+        match self.loop_type:
             case LoopType.SQUARE:
                 side_length = 4.0
                 half = side_length / 2.0
