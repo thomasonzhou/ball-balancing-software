@@ -38,9 +38,9 @@ class OperationMode(Enum):
 
 
 def main(
-    pid_mode: pid.PID_Mode,
+    pid_mode: pid.PID_Mode = pid.PID_Mode.DisturbanceRejection,
     operation_mode=OperationMode.COMPUTER_VISION,
-    motion_planner=motion_planner.LoopType.NONE,
+    planner=motion_planner.LoopType.NONE,
     motors_on=True,
     debug_mode=False,
 ):
@@ -48,7 +48,7 @@ def main(
     # Initialize Components
     # --------------------------------------------------
     controller = pid.Controller(pid_mode, print_errors=debug_mode, dead_zone=True)
-    planner = motion_planner.MotionPlanner(motion_planner)
+    planner = motion_planner.MotionPlanner(planner)
     if operation_mode == OperationMode.COMPUTER_VISION:
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
 
@@ -146,6 +146,6 @@ if __name__ == "__main__":
     main(
         pid_mode=pid.PID_Mode.DisturbanceRejection,
         operation_mode=OperationMode.COMPUTER_VISION,
-        motion_planner=motion_planner.LoopType.NONE,
+        planner=motion_planner.LoopType.NONE,
         debug_mode=True,
     )
