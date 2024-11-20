@@ -138,9 +138,9 @@ def main(
 
 if __name__ == "__main__":
     main(
-        pid_mode=pid.PID_Mode.PathPlanning,
-        operation_mode=OperationMode.COMPUTER_VISION,
-        planner=motion_planner.LoopType.TRIANGLE,
+        pid.PID_Mode.PathPlanning,
+        OperationMode.COMPUTER_VISION,
+        motion_planner.LoopType.TRIANGLE,
         debug_mode=False,
     )
     # main(
