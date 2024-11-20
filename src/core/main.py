@@ -37,14 +37,14 @@ class OperationMode(Enum):
     ARDUINO_JOYSTICK = 3
 
 
-def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
+def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mode=False):
     # --------------------------------------------------
     # Initialize Components
     # --------------------------------------------------
-    controller = pid.Controller()
+    controller = pid.Controller(print_errors=debug_mode)
     planner = motion_planner.MotionPlanner()
     if operation_mode == OperationMode.COMPUTER_VISION:
-        ball_detector = computer_vision.BallDetector(preview=True)
+        ball_detector = computer_vision.BallDetector(preview=debug_mode)
 
     # experimental trajectory
     # planner.load_square_trajectory()
@@ -134,4 +134,4 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.COMPUTER_VISION)
+    main(operation_mode=OperationMode.COMPUTER_VISION, debug_mode=True)
