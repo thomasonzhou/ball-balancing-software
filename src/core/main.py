@@ -96,7 +96,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
             for angle in abs_motor_angles:
                 assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD, f"angle {angle} OOB"
 
-            print(f"send to IK: {(math.degrees(a) for a in abs_motor_angles)}")
+            print(f"send to IK: {list(math.degrees(a) for a in abs_motor_angles)}")
             print()
 
             if motors_on:
