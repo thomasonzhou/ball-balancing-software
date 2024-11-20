@@ -10,7 +10,6 @@ import pid
 import math
 from enum import Enum
 import serial
-import numpy as np
 
 HOMING_STRING = "HOME"
 
@@ -18,6 +17,8 @@ PLATFORM_TILT_MIN_RAD = 0.0
 PLATFORM_TILT_MAX_RAD = math.pi / 12.0
 MOTOR_MIN_DEG = -52.0
 MOTOR_MAX_DEG = 52.0
+
+ANGLE_REDUCTION_FACTOR = 2.0
 
 MOTOR_MIN_RAD = math.radians(MOTOR_MIN_DEG)
 MOTOR_MAX_RAD = math.radians(MOTOR_MAX_DEG)
@@ -85,8 +86,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                 PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
             ), f"theta_rad OOB: {theta_rad}"
 
-            # theta_rad = np.clip(theta_rad, min=0, max=math.pi / 24.0).item()
-            theta_rad /= 2.0
+            theta_rad /= ANGLE_REDUCTION_FACTOR
 
             # IK
             abs_motor_angles = inverse_kinematics.translate_dir_to_motor_angles(
@@ -104,4 +104,4 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.ARDUINO_JOYSTICK)
+    main(operation_mode=OperationMode.COMPUTER_VISION)
