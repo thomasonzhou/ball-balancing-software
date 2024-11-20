@@ -20,7 +20,7 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
 class Controller:
     # Define PID gains and time interval
     kp = 0.13
-    ki = 0
+    ki = 0.01
     kd = 1.51
     dt = 0.1
     SAT_MAX_DEGREES = 9

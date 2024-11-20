@@ -53,7 +53,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
     if operation_mode == OperationMode.ARDUINO_JOYSTICK:
         arduino_serial = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1)
     motor_serial = serial.Serial(MOTOR_CONTROLLER_PORT, BAUD_RATE, timeout=1)
-    motor_serial.write("<h>\r\n".encode("ascii"))
 
     while not homing_completed:
         motor_serial.write("<h>\r".encode("ascii"))
