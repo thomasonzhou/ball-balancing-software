@@ -37,14 +37,18 @@ class OperationMode(Enum):
     ARDUINO_JOYSTICK = 3
 
 
-def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mode=False):
+def main(
+    pid_mode,
+    operation_mode=OperationMode.COMPUTER_VISION,
+    motion_planner=motion_planner.LoopType.NONE,
+    motors_on=True,
+    debug_mode=False,
+):
     # --------------------------------------------------
     # Initialize Components
     # --------------------------------------------------
-    controller = pid.Controller(
-        pid_mode=pid.PID_Mode.PathPlanning, print_errors=debug_mode, dead_zone=True
-    )
-    planner = motion_planner.MotionPlanner(motion_planner.LoopType.TRIANGLE)
+    controller = pid.Controller(pid_mode, print_errors=debug_mode, dead_zone=True)
+    planner = motion_planner.MotionPlanner(motion_planner)
     if operation_mode == OperationMode.COMPUTER_VISION:
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
 
@@ -133,4 +137,15 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.COMPUTER_VISION, debug_mode=True)
+    main(
+        pid.PID_Mode.PathPlanning,
+        operation_mode=OperationMode.COMPUTER_VISION,
+        motion_planner=motion_planner.LoopType.TRIANGLE,
+        debug_mode=True,
+    )
+    main(
+        pid.PID_Mode.DisturbanceRejection,
+        operation_mode=OperationMode.COMPUTER_VISION,
+        motion_planner=motion_planner.LoopType.NONE,
+        debug_mode=True,
+    )

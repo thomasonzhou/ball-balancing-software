@@ -79,3 +79,5 @@ class MotionPlanner:
             case LoopType.LINE:
                 length = 5.0
                 self._move_queue.extend([(0, length / 2.0), (0, -length / 2.0)])
+            case LoopType.NONE:
+                self._move_queue.append((0, 0))
