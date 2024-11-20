@@ -34,7 +34,7 @@ class OperationMode(Enum):
     ARDUINO_JOYSTICK = 3
 
 
-def main(operation_mode=OperationMode.COMPUTER_VISION):
+def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
     # --------------------------------------------------
     # Initialize Components
     # --------------------------------------------------
@@ -60,7 +60,9 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             if HOMING_STRING in received:
                 print("HOME detected")
                 homing_completed = True
-    py2motor.write_to_motors(motor_serial, (0, 0, 0))
+    if motors_on:
+        py2motor.write_to_motors(motor_serial, (0, 0, 0))
+
     try:
         while True:
             match operation_mode:
@@ -96,12 +98,16 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
 
             print(f"send to IK: {(math.degrees(a) for a in abs_motor_angles)}")
             print()
-            py2motor.write_to_motors(motor_serial, abs_motor_angles)
+
+            if motors_on:
+                py2motor.write_to_motors(motor_serial, abs_motor_angles)
 
     except KeyboardInterrupt:
-        ball_detector.close_stream()
-        if operation_mode == OperationMode.ARDUINO_JOYSTICK:
-            arduino_serial.close()
+        match operation_mode:
+            case OperationMode.COMPUTER_VISION:
+                ball_detector.close_stream()
+            case OperationMode.ARDUINO_JOYSTICK:
+                arduino_serial.close()
         motor_serial.close()
 
 
