@@ -41,7 +41,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
     # --------------------------------------------------
     # Initialize Components
     # --------------------------------------------------
-    controller = pid.Controller(print_errors=debug_mode)
+    controller = pid.Controller(print_errors=debug_mode, dead_zone=True)
     planner = motion_planner.MotionPlanner()
     if operation_mode == OperationMode.COMPUTER_VISION:
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
@@ -78,7 +78,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
             match operation_mode:
                 case OperationMode.COMPUTER_VISION:
                     # ball detection
-                    ball_position_plate_view = ball_detector.get_avg_ball_position_plate_view()
+                    ball_position_plate_view = ball_detector.get_ball_position_plate_view()
 
                     try_print(
                         f"ball position (top view): {list(round(b, 3) for b in ball_position_plate_view)}"
@@ -134,4 +134,4 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
 
 
 if __name__ == "__main__":
-    main(operation_mode=OperationMode.COMPUTER_VISION, debug_mode=False)
+    main(operation_mode=OperationMode.COMPUTER_VISION, debug_mode=True)

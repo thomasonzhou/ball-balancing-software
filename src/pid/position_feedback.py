@@ -17,24 +17,27 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
     return max(min(sat_max, control), sat_min)
 
 
-SAT_MAX_DEGREES = 8.5
+SAT_MAX_DEGREES = 8.25
 SAT_MIN_DEGREES = 0
+
+INTEGRAL_BOUND = 0.4
 
 
 class Controller:
     # Define PID gains and time interval
-    kp = 0.13
+    kp = 0.80
     ki = 0.01
-    kd = 1.7
+    kd = 0.55
     dt = 0.1
 
-    def __init__(self, print_errors=False):
+    def __init__(self, print_errors=False, dead_zone=False):
         self.prev_e_x = 0
         self.prev_e_y = 0
         self.int_x = 0
         self.int_y = 0
 
         self.print_errors = print_errors
+        self.dead_zone = dead_zone
 
     def calculate(
         self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]
@@ -73,6 +76,17 @@ class Controller:
         i_x = self.ki * self.int_x
         i_y = self.ki * self.int_y
 
+        # prevent windup
+        if i_x > INTEGRAL_BOUND:
+            i_x = INTEGRAL_BOUND
+        elif i_x < -INTEGRAL_BOUND:
+            i_x = -INTEGRAL_BOUND
+
+        if i_y > INTEGRAL_BOUND:
+            i_y = INTEGRAL_BOUND
+        elif i_y < -INTEGRAL_BOUND:
+            i_y = -INTEGRAL_BOUND
+
         if self.print_errors:
             print(f"p: {p_x:.5f}, {p_y:.5f}, d: {d_x:.5f}, {d_y:.5f}, i: {i_x:.5f}, {i_y:.5f}")
 
@@ -96,7 +110,7 @@ class Controller:
 
         # Saturate plate tilt and convert to radians
         sat_theta_mag = math.radians(saturate(theta_mag, SAT_MIN_DEGREES, SAT_MAX_DEGREES))
-        if sat_theta_mag < MIN_ANGLE_TO_MOVE:
+        if self.dead_zone and sat_theta_mag < MIN_ANGLE_TO_MOVE:
             sat_theta_mag = 0
 
         return dir_x, dir_y, sat_theta_mag

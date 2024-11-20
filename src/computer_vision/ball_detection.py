@@ -6,7 +6,7 @@ QUEUE_SIZE = 7
 
 
 class BallDetector:
-    def __init__(self, camera_index=0, preview=False):
+    def __init__(self, camera_index=0, preview=False, memory=False):
         self.cap = cv2.VideoCapture(camera_index)
         self.RES_WIDTH = 480
         self.RES_HEIGHT = 480
@@ -14,7 +14,9 @@ class BallDetector:
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.RES_WIDTH)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.RES_HEIGHT)
         self.preview = preview
-        self.last_ball_position = (0.0, 0.0)
+        self.memory = memory
+        if self.memory:
+            self.last_ball_position = (0.0, 0.0)
 
         # self.moving_avg_queue = deque()
         # total = [0.0, 0.0]
@@ -61,8 +63,10 @@ class BallDetector:
             relative_y = center_y - i[1]
             self.last_ball_position = (relative_x, relative_y)
             # print(f"Circle at (x, y) = ({relative_x}, {relative_y}) with radius {i[2]}")
-        else:
+        elif self.memory:
             relative_x, relative_y = self.last_ball_position
+        else:
+            relative_x, relative_y = 0, 0
 
         if self.preview:
             cv2.circle(frame, (center_x, center_y), 2, (255, 0, 0), -1)
@@ -80,27 +84,11 @@ class BallDetector:
         # print(f"cm: {list(float(b) for b in ball_position_centimeters)}")
         return ball_position_centimeters
 
-    def _get_ball_position_top_view(self):
+    def get_ball_position_plate_view(self):
         ball_position_bottom_view = self._get_ball_position_camera_view()
         # print(ball_position_bottom_view)
         ball_position_top_view_cm = camera_view_to_plate_view(ball_position_bottom_view)
         return ball_position_top_view_cm
-
-    def get_avg_ball_position_plate_view(self):
-        to_add = self._get_ball_position_top_view()
-        return to_add
-        # self.moving_avg_queue.append(to_add)
-
-        # to_remove = self.moving_avg_queue.popleft()
-
-        # self.moving_avg[0] += to_add[0] - to_remove[0]
-        # self.moving_avg[1] += to_add[1] - to_remove[1]
-
-        # self.count += 1
-        # if self.count % 10 == 0:
-        #     print(f"moving_avg: {self.moving_avg}")
-
-        # return self.moving_avg
 
     def close_stream(self):
         self.cap.release()
@@ -110,4 +98,4 @@ class BallDetector:
 if __name__ == "__main__":
     ball_detector = BallDetector(preview=True)
     while True:
-        ball_detector.get_avg_ball_position_plate_view()
+        ball_detector.get_ball_position_plate_view()
