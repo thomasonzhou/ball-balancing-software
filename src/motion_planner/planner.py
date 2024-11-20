@@ -24,7 +24,6 @@ class MotionPlanner:
             if self.ticks_needed == 0:
                 self._move_queue.popleft()
                 self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
-                self.update_target(current_position)
         else:
             self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
 
