@@ -3,13 +3,13 @@ import math
 
 DISTANCE_TOLERANCE_CM = 2
 DEFAULT_TARGET = (0.0, 0.0)
-TICKS_TO_CHANGE_SETPOINT = 10
+TICKS_TO_CHANGE_SETPOINT = 30
 
 
 class MotionPlanner:
     def __init__(self):
         self._move_queue = deque()
-        self.ticks_needed = 10
+        self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
 
     def update_target(self, current_position):
         """Advance to the next Movement if the end_condition of the current"""
@@ -47,7 +47,7 @@ class MotionPlanner:
             ]
         )
 
-    def load_triangle_trajectory(self, side_length=3.0):
+    def load_triangle_trajectory(self, side_length=4.0):
         """Unilateral triangle centered at (0,0)"""
         assert self.no_plan()
         TRIANGLE_HEIGHT_RATIO = math.sqrt(3) / 2.0
@@ -71,3 +71,8 @@ class MotionPlanner:
             x = radius * math.cos(angle)
             y = radius * math.sin(angle)
             self._move_queue.append((x, y))
+
+    def load_line_trajectory(self, length=5.0):
+        """Line centered at (0,0)"""
+        assert self.no_plan()
+        self._move_queue.extend([(0, length / 2.0), (0, -length / 2.0)])

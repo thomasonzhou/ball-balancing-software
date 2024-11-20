@@ -87,7 +87,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
                     target_position_plate_view = planner.update_target(ball_position_plate_view)
                     if planner.no_plan():
                         # experimental trajectory
-                        planner.load_square_trajectory()
+                        planner.load_line_trajectory()
 
                     dir_x, dir_y, theta_rad = controller.calculate(
                         desired_pos=target_position_plate_view,
