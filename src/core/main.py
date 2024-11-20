@@ -41,7 +41,9 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
     # --------------------------------------------------
     # Initialize Components
     # --------------------------------------------------
-    controller = pid.Controller(print_errors=debug_mode, dead_zone=True)
+    controller = pid.Controller(
+        pid_params=pid.PID_Mode.PathPlanning, print_errors=debug_mode, dead_zone=True
+    )
     planner = motion_planner.MotionPlanner()
     if operation_mode == OperationMode.COMPUTER_VISION:
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
