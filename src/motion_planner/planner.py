@@ -4,7 +4,7 @@ from enum import Enum
 
 DISTANCE_TOLERANCE_CM = 1
 DEFAULT_TARGET = (0.0, 0.0)
-TICKS_TO_CHANGE_SETPOINT = 30
+TICKS_TO_CHANGE_SETPOINT = 5
 
 
 class LoopType(Enum):
