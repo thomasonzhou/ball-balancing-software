@@ -55,9 +55,9 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
         if motor_serial.in_waiting > 0:
             homing_string = motor_serial.read(size=4)
             received = homing_string.decode("ascii").strip()
-        if HOMING_STRING in received:
-            print("HOME detected")
-            homing_completed = True
+            if HOMING_STRING in received:
+                print("HOME detected")
+                homing_completed = True
     py2motor.write_to_motors(motor_serial, (0, 0, 0))
 
     try:
