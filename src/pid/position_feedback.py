@@ -24,8 +24,8 @@ SAT_MIN_DEGREES = 0
 class Controller:
     # Define PID gains and time interval
     kp = 0.80
-    ki = 0
-    kd = 0.45
+    ki = 0.00
+    kd = 0.5
     dt = 0.1
 
     def __init__(self, print_errors=False, dead_zone=False):
