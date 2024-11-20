@@ -97,8 +97,8 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
             for angle in abs_motor_angles:
                 assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD, f"angle {angle} OOB"
 
-            curr_time = time.time()
-            if curr_time - last_command_sent >= 1:
+            curr_time = time.time() * 1000
+            if curr_time - last_command_sent >= 50:
                 last_command_sent = curr_time
                 py2motor.write_to_motors(motor_serial, abs_motor_angles)
 
