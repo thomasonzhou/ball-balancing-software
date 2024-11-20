@@ -78,7 +78,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                     (dir_x, dir_y), theta_rad = serial2py.read_wasd()
                 case OperationMode.ARDUINO_JOYSTICK:
                     dir_x, dir_y, theta_rad = serial2py.read_arduino_joystick(arduino_serial)
-            print(f"{dir_x:.2f}, {dir_y:.2f}, {math.radians(theta_rad):.2f}")
+            print(f"{dir_x:.2f}, {dir_y:.2f}, {math.radians(theta_rad):.5f}")
 
             assert (
                 PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
