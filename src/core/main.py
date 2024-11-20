@@ -38,7 +38,7 @@ class OperationMode(Enum):
 
 
 def main(
-    pid_mode,
+    pid_mode: pid.PID_Mode,
     operation_mode=OperationMode.COMPUTER_VISION,
     motion_planner=motion_planner.LoopType.NONE,
     motors_on=True,
