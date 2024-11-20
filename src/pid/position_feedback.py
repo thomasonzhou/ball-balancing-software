@@ -1,6 +1,6 @@
 import math
 
-MIN_ANGLE_TO_MOVE = math.radians(1)
+MIN_ANGLE_TO_MOVE = math.radians(2)
 
 
 def saturate(control: float, sat_min: float, sat_max: float) -> float:
