@@ -1,5 +1,6 @@
 import math
 
+
 def saturate(control: float, sat_min: float, sat_max: float) -> float:
     """Helper function to keep the PID controller between the limits
 
@@ -7,11 +8,12 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
         control (float): Control angle (deg)
         sat_min (float): Minimum angle (deg)
         sat_max (float): Maximum angle (deg)
-     
+
     Returns:
         float: Control angle within the saturation limits (deg)
     """
     return max(min(sat_max, control), sat_min)
+
 
 class Controller:
     # Define PID gains and time interval
@@ -19,22 +21,24 @@ class Controller:
     ki = 0
     kd = 0.05
     dt = 0.1
-    sat_max = 15
-    sat_min = -15
-    
+    SAT_MAX_DEGREES = 15
+    SAT_MIN_DEGREES = 0
+
     def __init__(self):
         self.prev_e_x = 0
         self.prev_e_y = 0
         self.int_x = 0
         self.int_y = 0
 
-    def calculate(self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]) -> tuple[float, float, float]:
+    def calculate(
+        self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]
+    ) -> tuple[float, float, float]:
         """Main PID function
-        
+
         Args:
             desired_pos (tuple of two floats): desired x and y position of the ball
             actual_pos (tuple of two floats): current x and y position of the ball
-            
+
         Returns:
              tuple of three floats: [dir_x, dir_y, sat_theta_mag]
                   dir_x: x-component of the unit direction vector to tilt the plate
@@ -78,9 +82,11 @@ class Controller:
             dir_x = u_x / theta_mag
             dir_y = u_y / theta_mag
         else:
-            dir_x, dir_y = 0,0
+            dir_x, dir_y = 0, 0
 
         # Saturate plate tilt and convert to radians
-        sat_theta_mag = math.radians(saturate(theta_mag, self.sat_min, self.sat_max))
+        sat_theta_mag = math.radians(
+            saturate(theta_mag, self.SAT_MIN_DEGREES, self.SAT_MAX_DEGREES)
+        )
 
         return dir_x, dir_y, sat_theta_mag
