@@ -17,7 +17,7 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
     return max(min(sat_max, control), sat_min)
 
 
-SAT_MAX_DEGREES = 8.5
+SAT_MAX_DEGREES = 7
 SAT_MIN_DEGREES = 0
 
 
