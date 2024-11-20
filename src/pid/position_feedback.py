@@ -77,9 +77,12 @@ class Controller:
         i_y = self.ki * self.int_y
 
         if self.print_errors:
-            print(f"p: {p_x}, {p_y}, d: {d_x}, {d_y}, i: {i_x}, {i_y}")
-            # self.fig.barh(["Px", "Py", "Dx", "Dy", "Ix", "Iy"], [p_x, p_y, d_x, d_y, i_x, i_y])
-            # self.fig.show()
+            # print(f"p: {p_x:.5f}, {p_y:.5f}, d: {d_x:.5f}, {d_y:.5f}, i: {i_x:.5f}, {i_y:.5f}")
+            self.fig.barh(
+                ["|Px|", "|Py|", "|Dx|", "|Dy|", "|Ix|", "|Iy|"],
+                [abs(p_x), abs(p_y), abs(d_x), abs(d_y), abs(i_x), abs(i_y)],
+            )
+            self.fig.show()
 
         # Update error
         self.prev_e_x = e_x
