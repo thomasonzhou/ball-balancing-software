@@ -26,7 +26,7 @@ class MotionPlanner:
     def no_plan(self):
         return len(self._move_queue) == 0
 
-    def load_square_trajectory(self, side_length=3.0):
+    def load_square_trajectory(self, side_length=5.0):
         """Square centered at (0,0)"""
         assert self.no_plan()
         half = side_length / 2.0

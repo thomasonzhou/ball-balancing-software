@@ -46,9 +46,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
     if operation_mode == OperationMode.COMPUTER_VISION:
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
 
-    # experimental trajectory
-    planner.load_square_trajectory()
-
     homing_completed = False
     if operation_mode == OperationMode.ARDUINO_JOYSTICK:
         arduino_serial = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1)
@@ -74,6 +71,10 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
     try:
         while True:
             count += 1
+
+            if planner.no_plan():
+                # experimental trajectory
+                planner.load_square_trajectory()
 
             match operation_mode:
                 case OperationMode.COMPUTER_VISION:
