@@ -93,6 +93,7 @@ class BallDetector:
 
         self.moving_avg[0] += to_add[0] - to_remove[0]
         self.moving_avg[1] += to_add[1] - to_remove[1]
+        print(f"moving_avg: {self.moving_avg}")
 
         return self.moving_avg
 
