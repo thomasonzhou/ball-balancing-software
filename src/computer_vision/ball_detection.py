@@ -12,6 +12,7 @@ class BallDetector:
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.RES_WIDTH)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.RES_HEIGHT)
         self.preview = preview
+        self.last_ball_position = (0.0, 0.0)
 
     def _get_frame(self):
         ret = None
@@ -47,9 +48,10 @@ class BallDetector:
 
             relative_x = center_x - i[0]
             relative_y = center_y - i[1]
+            self.last_ball_position = (relative_x, relative_y)
             # print(f"Circle at (x, y) = ({relative_x}, {relative_y}) with radius {i[2]}")
         else:
-            relative_x, relative_y = 0.0, 0.0
+            relative_x, relative_y = self.last_ball_position
 
         if self.preview:
             cv2.circle(frame, (center_x, center_y), 2, (255, 0, 0), -1)
@@ -67,13 +69,12 @@ class BallDetector:
 
     def get_ball_position_plate_view(self):
         ball_position_bottom_view = self._get_ball_position_camera_view()
-        print(ball_position_bottom_view)
-        ball_position_top_view = camera_view_to_plate_view(ball_position_bottom_view)
-        return ball_position_top_view
+        # print(ball_position_bottom_view)
+        ball_position_top_view_cm = camera_view_to_plate_view(ball_position_bottom_view)
+        return ball_position_top_view_cm
 
     def close_stream(self):
-        self.cap.stop()
-        self.cap.stream.release()
+        self.cap.release()
         cv2.destroyAllWindows()
 
 

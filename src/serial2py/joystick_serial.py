@@ -40,7 +40,7 @@ def joystick_decode(joystick_serial: serial.Serial) -> Optional[tuple[float, flo
 
 
 if __name__ == "__main__":
-    DEFAULT_PORT = "/dev/cu.usbmodem1301"
+    DEFAULT_PORT = "/dev/cu.usbmodem11301"
     BAUD_RATE = 115200
     default_ser = serial.Serial(DEFAULT_PORT, BAUD_RATE, timeout=1)
     while True:
