@@ -85,7 +85,8 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                 PLATFORM_TILT_MIN_RAD <= theta_rad <= PLATFORM_TILT_MAX_RAD
             ), f"theta_rad OOB: {theta_rad}"
 
-            theta_rad = np.clip(theta_rad, min=0, max=math.pi / 24.0).item()
+            # theta_rad = np.clip(theta_rad, min=0, max=math.pi / 24.0).item()
+            theta_rad /= 2.0
 
             # IK
             abs_motor_angles = inverse_kinematics.translate_dir_to_motor_angles(
