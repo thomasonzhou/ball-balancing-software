@@ -23,4 +23,4 @@ def scale_pixels_to_centimeters(circle_position_pixels, pixels_h):
 
 
 def camera_view_to_plate_view(ball_position_bottom_view):
-    return (-ball_position_bottom_view[0], ball_position_bottom_view[1])
+    return (ball_position_bottom_view[0], ball_position_bottom_view[1])
