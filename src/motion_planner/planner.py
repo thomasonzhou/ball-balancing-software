@@ -1,7 +1,7 @@
 from collections import deque
 import math
 
-DISTANCE_TOLERANCE_CM = 2
+DISTANCE_TOLERANCE_CM = 1
 DEFAULT_TARGET = (0.0, 0.0)
 TICKS_TO_CHANGE_SETPOINT = 30
 
@@ -26,9 +26,6 @@ class MotionPlanner:
                 self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
         else:
             self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
-
-        # print(f"target {self._move_queue}")
-        return self._move_queue[0]
 
     def no_plan(self):
         return len(self._move_queue) == 0
