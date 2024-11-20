@@ -3,11 +3,13 @@ import math
 
 DISTANCE_TOLERANCE_CM = 1
 DEFAULT_TARGET = (0.0, 0.0)
+TICKS_TO_CHANGE_SETPOINT = 10
 
 
 class MotionPlanner:
     def __init__(self):
         self._move_queue = deque()
+        self.ticks_needed = 10
 
     def update_target(self, current_position):
         """Advance to the next Movement if the end_condition of the current"""
@@ -18,8 +20,13 @@ class MotionPlanner:
             abs(target - curr) < DISTANCE_TOLERANCE_CM
             for target, curr in zip(self._move_queue[0], current_position)
         ):
-            self._move_queue.popleft()
-            return self.update_target(current_position)
+            self.ticks_needed -= 1
+            if self.ticks_needed == 0:
+                self._move_queue.popleft()
+                self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
+                self.update_target(current_position)
+        else:
+            self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
 
         print(f"target {self._move_queue}")
         return self._move_queue[0]
@@ -27,7 +34,7 @@ class MotionPlanner:
     def no_plan(self):
         return len(self._move_queue) == 0
 
-    def load_square_trajectory(self, side_length=5.0):
+    def load_square_trajectory(self, side_length=3.0):
         """Square centered at (0,0)"""
         assert self.no_plan()
         half = side_length / 2.0
@@ -41,7 +48,7 @@ class MotionPlanner:
             ]
         )
 
-    def load_triangle_trajectory(self, side_length=5.0):
+    def load_triangle_trajectory(self, side_length=3.0):
         """Unilateral triangle centered at (0,0)"""
         assert self.no_plan()
         TRIANGLE_HEIGHT_RATIO = math.sqrt(3) / 2.0
@@ -57,7 +64,7 @@ class MotionPlanner:
             ]
         )
 
-    def load_circle_trajectory(self, radius=5.0, num_points=36):
+    def load_circle_trajectory(self, radius=3.0, num_points=36):
         """Circle centered at (0,0)"""
         assert self.no_plan()
         for i in range(num_points):
