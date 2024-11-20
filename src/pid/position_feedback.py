@@ -1,4 +1,5 @@
 import math
+import termplotlib as tpl
 
 MIN_ANGLE_TO_MOVE = math.radians(0.5)
 
@@ -28,13 +29,15 @@ class Controller:
     kd = 1.7
     dt = 0.1
 
-    def __init__(self):
+    def __init__(self, print_errors=False):
         self.prev_e_x = 0
         self.prev_e_y = 0
         self.int_x = 0
         self.int_y = 0
 
-        self.count = 0
+        self.print_errors = print_errors
+        if self.print_errors:
+            self.fig = tpl.figure()
 
     def calculate(
         self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]
@@ -58,9 +61,6 @@ class Controller:
         # Calculate error
         e_x = x_r - x
         e_y = y_r - y
-        self.count += 1
-        if self.count % 10 == 0:
-            print(f"error x: {e_x} y: {e_y}")
 
         # Calculate proportional term
         p_x = self.kp * e_x
@@ -75,6 +75,10 @@ class Controller:
         self.int_y += e_y * self.dt
         i_x = self.ki * self.int_x
         i_y = self.ki * self.int_y
+
+        if self.print_errors:
+            self.fig.barh(["Px", "Py", "Dx", "Dy", "Ix", "Iy"], [p_x, p_y, d_x, d_y, i_x, i_y])
+            self.fig.show()
 
         # Update error
         self.prev_e_x = e_x
