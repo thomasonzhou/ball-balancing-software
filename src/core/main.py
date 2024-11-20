@@ -47,7 +47,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
 
     # experimental trajectory
-    # planner.load_square_trajectory()
+    planner.load_square_trajectory()
 
     homing_completed = False
     if operation_mode == OperationMode.ARDUINO_JOYSTICK:
