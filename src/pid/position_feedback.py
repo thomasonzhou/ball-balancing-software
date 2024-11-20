@@ -23,7 +23,7 @@ SAT_MIN_DEGREES = 0
 
 class Controller:
     # Define PID gains and time interval
-    kp = 0.7
+    kp = 0.8
     ki = 0
     kd = 0.15
     dt = 0.1
