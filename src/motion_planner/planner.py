@@ -28,7 +28,7 @@ class MotionPlanner:
         else:
             self.ticks_needed = TICKS_TO_CHANGE_SETPOINT
 
-        print(f"target {self._move_queue}")
+        # print(f"target {self._move_queue}")
         return self._move_queue[0]
 
     def no_plan(self):
