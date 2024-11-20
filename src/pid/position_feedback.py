@@ -28,13 +28,14 @@ class Controller:
     kd = 0.15
     dt = 0.1
 
-    def __init__(self, print_errors=False):
+    def __init__(self, print_errors=False, dead_zone=False):
         self.prev_e_x = 0
         self.prev_e_y = 0
         self.int_x = 0
         self.int_y = 0
 
         self.print_errors = print_errors
+        self.dead_zone = dead_zone
 
     def calculate(
         self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]
@@ -96,7 +97,7 @@ class Controller:
 
         # Saturate plate tilt and convert to radians
         sat_theta_mag = math.radians(saturate(theta_mag, SAT_MIN_DEGREES, SAT_MAX_DEGREES))
-        if sat_theta_mag < MIN_ANGLE_TO_MOVE:
+        if self.dead_zone and sat_theta_mag < MIN_ANGLE_TO_MOVE:
             sat_theta_mag = 0
 
         return dir_x, dir_y, sat_theta_mag
