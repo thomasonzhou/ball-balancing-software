@@ -38,9 +38,9 @@ class OperationMode(Enum):
 
 
 def main(
-    pid_mode: pid.PID_Mode = pid.PID_Mode.DisturbanceRejection,
-    operation_mode=OperationMode.COMPUTER_VISION,
-    planner=motion_planner.LoopType.NONE,
+    pid_mode: pid.PID_Mode,
+    operation_mode: OperationMode,
+    planner: motion_planner.LoopType,
     motors_on=True,
     debug_mode=False,
 ):
@@ -140,12 +140,12 @@ if __name__ == "__main__":
     main(
         pid_mode=pid.PID_Mode.PathPlanning,
         operation_mode=OperationMode.COMPUTER_VISION,
-        motion_planner=motion_planner.LoopType.TRIANGLE,
-        debug_mode=True,
+        planner=motion_planner.LoopType.TRIANGLE,
+        debug_mode=False,
     )
     # main(
     #     pid_mode=pid.PID_Mode.DisturbanceRejection,
     #     operation_mode=OperationMode.COMPUTER_VISION,
     #     planner=motion_planner.LoopType.NONE,
-    #     debug_mode=True,
+    #     debug_mode=False,
     # )
