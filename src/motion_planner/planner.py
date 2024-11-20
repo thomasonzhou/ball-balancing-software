@@ -21,6 +21,7 @@ class MotionPlanner:
             self._move_queue.popleft()
             return self.update_target(current_position)
 
+        print(f"target {self._move_queue}")
         return self._move_queue[0]
 
     def no_plan(self):
