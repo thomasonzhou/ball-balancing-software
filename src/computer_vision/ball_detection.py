@@ -22,8 +22,8 @@ class BallDetector:
         for _ in range(QUEUE_SIZE):
             ball_pos = self._get_ball_position_top_view()
             self.moving_avg_queue.append(ball_pos)
-            self.total[0] += ball_pos[0]
-            self.total[1] += ball_pos[1]
+            total[0] += ball_pos[0]
+            total[1] += ball_pos[1]
         self.moving_avg = [total[0] / QUEUE_SIZE, total[1] / QUEUE_SIZE]
 
     def _get_frame(self):
