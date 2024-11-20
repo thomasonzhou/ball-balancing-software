@@ -57,7 +57,7 @@ class MotionPlanner:
                     ]
                 )
             case LoopType.TRIANGLE:
-                side_length = 7.0
+                side_length = 6.0
                 TRIANGLE_HEIGHT_RATIO = math.sqrt(3) / 2.0
                 half_height = TRIANGLE_HEIGHT_RATIO * side_length / 2.0
                 self._move_queue.extend(
