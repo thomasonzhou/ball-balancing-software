@@ -48,8 +48,8 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
     if operation_mode == OperationMode.ARDUINO_JOYSTICK:
         arduino_serial = serial.Serial(ARDUINO_PORT, BAUD_RATE, timeout=1)
     motor_serial = serial.Serial(MOTOR_CONTROLLER_PORT, BAUD_RATE, timeout=1)
-    motor_serial.write(("<h>\r\n").encode("ascii"))
-    recieved = ""
+    motor_serial.write("<h>\r\n".encode('ascii'))
+    received = ""
     while not homing_completed:
         print(f"sent {HOMING_STRING}")
         # while len(motor_serial.)
@@ -57,11 +57,11 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
         #     # print("waiting")
         #     continue
         if motor_serial.in_waiting > 0:
-            homing_string = motor_serial.read()
-            decoded = homing_string.decode("ascii").strip()
-            recieved += decoded
+            homing_string = motor_serial.read(motor_serial.in_waiting)
+            decoded = homing_string.decode('ascii').strip()
+            received += decoded
             print(f"got {recieved}")
-        if recieved == HOMING_STRING:
+        if HOMING_STRING in received:
             print("HOME detected")
             homing_completed = True
     py2motor.write_to_motors(motor_serial, (0, 0, 0))
