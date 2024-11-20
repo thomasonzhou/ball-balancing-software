@@ -17,14 +17,16 @@ def saturate(control: float, sat_min: float, sat_max: float) -> float:
     return max(min(sat_max, control), sat_min)
 
 
+SAT_MAX_DEGREES = 8.5
+SAT_MIN_DEGREES = 0
+
+
 class Controller:
     # Define PID gains and time interval
     kp = 0.13
     ki = 0.01
     kd = 1.7
     dt = 0.1
-    SAT_MAX_DEGREES = 9
-    SAT_MIN_DEGREES = 0
 
     def __init__(self):
         self.prev_e_x = 0
@@ -93,9 +95,7 @@ class Controller:
             dir_x, dir_y = 0, 0
 
         # Saturate plate tilt and convert to radians
-        sat_theta_mag = math.radians(
-            saturate(theta_mag, self.SAT_MIN_DEGREES, self.SAT_MAX_DEGREES)
-        )
+        sat_theta_mag = math.radians(saturate(theta_mag, SAT_MIN_DEGREES, SAT_MAX_DEGREES))
         if sat_theta_mag < MIN_ANGLE_TO_MOVE:
             sat_theta_mag = 0
 
