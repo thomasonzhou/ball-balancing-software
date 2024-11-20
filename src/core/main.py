@@ -15,8 +15,8 @@ HOMING_STRING = "HOME"
 
 PLATFORM_TILT_MIN_RAD = 0.0
 PLATFORM_TILT_MAX_RAD = math.pi / 12.0
-MOTOR_MIN_DEG = -51.0
-MOTOR_MAX_DEG = 51.0
+MOTOR_MIN_DEG = -52.0
+MOTOR_MAX_DEG = 52.0
 
 MOTOR_MIN_RAD = math.radians(MOTOR_MIN_DEG)
 MOTOR_MAX_RAD = math.radians(MOTOR_MAX_DEG)
@@ -78,7 +78,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION):
                     (dir_x, dir_y), theta_rad = serial2py.read_wasd()
                 case OperationMode.ARDUINO_JOYSTICK:
                     dir_x, dir_y, theta_rad = serial2py.read_arduino_joystick(arduino_serial)
-                    print(dir_x, dir_y, theta_rad)
             print(f"{dir_x:.2f}, {dir_y:.2f}, {math.radians(theta_rad):.2f}")
 
             assert (
