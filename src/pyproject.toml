@@ -20,6 +20,8 @@ packages = [
   "py2motor",
   "pid"
 ]
+[project.scripts]
+paas="core:main"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
