@@ -1,7 +1,7 @@
 from collections import deque
 import math
 
-DISTANCE_TOLERANCE_CM = 1
+DISTANCE_TOLERANCE_CM = 2
 DEFAULT_TARGET = (0.0, 0.0)
 TICKS_TO_CHANGE_SETPOINT = 10
 
@@ -64,7 +64,7 @@ class MotionPlanner:
             ]
         )
 
-    def load_circle_trajectory(self, radius=3.0, num_points=36):
+    def load_circle_trajectory(self, radius=4.0, num_points=36):
         """Circle centered at (0,0)"""
         assert self.no_plan()
         for i in range(num_points):
