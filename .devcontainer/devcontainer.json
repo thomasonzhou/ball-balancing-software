@@ -13,7 +13,7 @@
         }
     },
     "mounts": [
-        "source=${localWorkspaceFolder}/python,target=/app/python,type=bind"
+        "source=${localWorkspaceFolder}/src,target=/app/src,type=bind"
     ]
     // "postCreateCommand":
 }
