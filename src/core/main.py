@@ -44,7 +44,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
     controller = pid.Controller(
         pid_mode=pid.PID_Mode.PathPlanning, print_errors=debug_mode, dead_zone=True
     )
-    planner = motion_planner.MotionPlanner()
+    planner = motion_planner.MotionPlanner(motion_planner.LoopType.CIRCLE)
     if operation_mode == OperationMode.COMPUTER_VISION:
         ball_detector = computer_vision.BallDetector(preview=debug_mode)
 
@@ -83,10 +83,6 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True, debug_mod
                         f"ball position (top view): {list(round(b, 3) for b in ball_position_plate_view)}"
                     )
 
-                    # path planning
-                    if planner.no_plan():
-                        # experimental trajectory
-                        planner.load_square_trajectory()
                     target_position_plate_view = planner.update_target(ball_position_plate_view)
 
                     dir_x, dir_y, theta_rad = controller.calculate(
