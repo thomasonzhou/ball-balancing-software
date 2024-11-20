@@ -32,6 +32,8 @@ class Controller:
         self.int_x = 0
         self.int_y = 0
 
+        self.count = 0
+
     def calculate(
         self, desired_pos: tuple[float, float], actual_pos: tuple[float, float]
     ) -> tuple[float, float, float]:
@@ -47,12 +49,16 @@ class Controller:
                   dir_y: y-component of the unit direction vector to tilt the plate
                   sat_theta_mag: angle to tilt the plate (rad)
         """
+
         x_r, y_r = desired_pos
         x, y = actual_pos
 
         # Calculate error
         e_x = x_r - x
         e_y = y_r - y
+        self.count += 1
+        if self.count % 10 == 0:
+            print(f"error x: {e_x} y: {e_y}")
 
         # Calculate proportional term
         p_x = self.kp * e_x

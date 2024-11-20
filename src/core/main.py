@@ -10,6 +10,7 @@ import pid
 import math
 from enum import Enum
 import serial
+import time
 
 HOMING_STRING = "HOME"
 
@@ -80,7 +81,9 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
                     # ball detection
                     ball_position_plate_view = ball_detector.get_avg_ball_position_plate_view()
 
-                    try_print(f"ball position (top view): {ball_position_plate_view}")
+                    try_print(
+                        f"ball position (top view): {list(round(b, 3) for b in ball_position_plate_view)}"
+                    )
 
                     # path planning
                     target_position_plate_view = planner.update_target(ball_position_plate_view)
@@ -108,7 +111,9 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
             for angle in abs_motor_angles:
                 assert MOTOR_MIN_RAD <= angle <= MOTOR_MAX_RAD, f"angle {angle} OOB"
 
-            try_print(f"send to IK: {list(math.degrees(a) for a in abs_motor_angles)}\n")
+            try_print(
+                f"send to IK: {list(round(math.degrees(a), ndigits=3) for a in abs_motor_angles)}\n"
+            )
 
             if motors_on:
                 py2motor.write_to_motors(motor_serial, abs_motor_angles)
@@ -118,6 +123,7 @@ def main(operation_mode=OperationMode.COMPUTER_VISION, motors_on=True):
             py2motor.write_to_motors(
                 motor_serial, (SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD, SHUTDOWN_MOTOR_RAD)
             )
+            time.sleep(0.5)
         match operation_mode:
             case OperationMode.COMPUTER_VISION:
                 ball_detector.close_stream()
