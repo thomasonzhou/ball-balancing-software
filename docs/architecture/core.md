@@ -1,6 +1,6 @@
 ```mermaid
 flowchart LR
-    subgraph core.main
+    subgraph Python on Raspberry Pi
 
         serial2py.read_arduino_joystick --> inverse_kinematics
         computer_vision --> pid
