@@ -3,7 +3,7 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "PAAS"
+name = "ball-balancing-robot"
 description = "The real deal"
 version = "0.0.1"
 dynamic = ["dependencies"]
@@ -21,7 +21,7 @@ packages = [
   "pid"
 ]
 [project.scripts]
-paas="core:main"
+start="core:main"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
