@@ -2,7 +2,7 @@
 
 Moving a ball along trajectories using computer vision, PID control, inverse kinematics, and three stepper motors.
 
-## Triangle Trajectory:
+https://github.com/user-attachments/assets/f4a4e480-b639-42fb-8478-f429e09720b2
 
 
 # Architecture
