@@ -11,7 +11,7 @@ https://github.com/user-attachments/assets/f4a4e480-b639-42fb-8478-f429e09720b2
 |-|-|-|-|
 | **computer_vision** | camera frames (USB) | compute ball position using Circle Hough Transform | ball (x, y) in global frame|
 | **trajectory_planner** | ball (x, y) | stores and updates target waypoints | current target position |
-| **pid** | positional, accumulated, velocity errors | calculates tilt adjustments to minimize errors | direction and angle of platform tilt |
+| **pid** | ball (x, y) and target (x, y) | calculates tilt adjustments to minimize positional, accumulated, velocity errors  | direction and angle of platform tilt |
 | **inverse_kinematics** | direction and angle of platform tilt | convert tilt target to stepper motor angles | angle for each stepper motor |
 | **py2motor** | 3 stepper motor angles | communicate with stepper driver over serial | instructions encoded with custom protocol |
 | **core** | static config specifying trajectory and controller params |integration of modules, sanity checks between packages | None |
